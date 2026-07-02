@@ -1,0 +1,12 @@
+[build]
+  builder = "DOCKERFILE"
+  dockerfilePath = "Dockerfile"
+
+[deploy]
+  restartPolicyType = "ALWAYS"
+  healthcheckPath = "/api/cases"
+  healthcheckTimeout = 100
+
+[[servicePorts]]
+  port = 3000
+  protocol = "TCP"

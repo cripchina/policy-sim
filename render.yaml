@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: policy-sim
+    env: docker
+    repo: https://github.com/cripchina/policy-sim
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /api/cases
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: "3000"
