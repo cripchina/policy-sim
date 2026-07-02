@@ -4,7 +4,7 @@ services:
     env: docker
     repo: https://github.com/cripchina/policy-sim
     dockerfilePath: ./Dockerfile
-    healthCheckPath: /api/cases
+    healthCheckPath: /api/health
     envVars:
       - key: NODE_ENV
         value: production

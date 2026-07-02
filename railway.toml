@@ -4,7 +4,7 @@
 
 [deploy]
   restartPolicyType = "ALWAYS"
-  healthcheckPath = "/api/cases"
+  healthcheckPath = "/api/health"
   healthcheckTimeout = 100
 
 [[servicePorts]]
