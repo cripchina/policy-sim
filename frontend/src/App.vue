@@ -1,6 +1,10 @@
 <template>
   <div id="app-container">
-    <router-view />
+    <router-view v-slot="{ Component }">
+      <transition name="page-fade" mode="out-in">
+        <component :is="Component" />
+      </transition>
+    </router-view>
   </div>
 </template>
 
@@ -54,5 +58,19 @@ html, body, #app, #app-container {
   --el-button-border-color: var(--primary);
   --el-button-hover-bg-color: var(--primary-light);
   --el-button-hover-border-color: var(--primary-light);
+}
+
+/* Page transition */
+.page-fade-enter-active,
+.page-fade-leave-active {
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+.page-fade-enter-from {
+  opacity: 0;
+  transform: translateY(8px);
+}
+.page-fade-leave-to {
+  opacity: 0;
+  transform: translateY(-4px);
 }
 </style>

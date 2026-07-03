@@ -26,12 +26,12 @@ export class SeedService implements OnModuleInit {
     const hashedPwd = await bcrypt.hash('123456', 10);
 
     await this.userRepo.save([
-      { username: 'admin', password: hashedPwd, displayName: 'ÏµÍ³¹ÜÀíÔ±', role: UserRole.ADMIN },
-      { username: 'teacher1', password: hashedPwd, displayName: 'ÕÅ½ÌÊÚ', role: UserRole.TEACHER },
-      { username: 'teacher2', password: hashedPwd, displayName: 'ÀîÀÏÊ¦', role: UserRole.TEACHER },
-      { username: 'student1', password: hashedPwd, displayName: 'ÍõÍ¬Ñ§', role: UserRole.STUDENT },
-      { username: 'student2', password: hashedPwd, displayName: 'ÁõÍ¬Ñ§', role: UserRole.STUDENT },
-      { username: 'student3', password: hashedPwd, displayName: '³ÂÍ¬Ñ§', role: UserRole.STUDENT },
+      { username: 'admin', password: hashedPwd, displayName: 'ç³»ç»Ÿç®¡ç†å‘˜', role: UserRole.ADMIN },
+      { username: 'teacher1', password: hashedPwd, displayName: 'å¼ è€å¸ˆ', role: UserRole.TEACHER },
+      { username: 'teacher2', password: hashedPwd, displayName: 'ç‹è€å¸ˆ', role: UserRole.TEACHER },
+      { username: 'student1', password: hashedPwd, displayName: 'æåŒå­¦', role: UserRole.STUDENT },
+      { username: 'student2', password: hashedPwd, displayName: 'èµµåŒå­¦', role: UserRole.STUDENT },
+      { username: 'student3', password: hashedPwd, displayName: 'é™ˆåŒå­¦', role: UserRole.STUDENT },
     ]);
 
     const cases = this.buildCases();
@@ -43,108 +43,247 @@ export class SeedService implements OnModuleInit {
   private buildCases(): Partial<PolicyCase>[] {
     return [
       {
-        title: 'Ë°ÊÕÕş²ßµ÷Õû¶Ôºê¹Û¾­¼ÃµÄÓ°Ïì',
-        description: 'Ä£Äâµ÷ÕûÔöÖµË°ÂÊ¡¢ÆóÒµËùµÃË°ÂÊµÈË°ÊÕ¹¤¾ß£¬¹Û²ì¶ÔGDP¡¢¾ÍÒµ¡¢ÊÕÈë·ÖÅäµÈºê¹Û¾­¼ÃÖ¸±êµÄÓ°Ïì¡£',
-        category: '²ÆÕşË°ÊÕ',
-        background: '## °¸Àı±³¾°\n\nË°ÊÕÕş²ßÊÇ¹ú¼Òºê¹Ûµ÷¿ØµÄÖØÒª¹¤¾ß¡£µ±Ç°ÎÒ¹ú¾­¼ÃÃæÁÙÏÂĞĞÑ¹Á¦£¬ÈçºÎÍ¨¹ıË°ÊÕÕş²ßµ÷ÕûÀ´"ÎÈÔö³¤¡¢µ÷½á¹¹¡¢»İÃñÉú"ÊÇÕş¸®ÃæÁÙµÄ¹Ø¼ü¿ÎÌâ¡£',
+        title: 'ç¨æ”¶æ”¿ç­–å¯¹å®è§‚ç»æµçš„å½±å“',
+        description: 'æ¨¡æ‹Ÿå¢å€¼ç¨ç‡ã€ä¼ä¸šæ‰€å¾—ç¨ç‡ç­‰ç¨æ”¶å·¥å…·ï¼Œè§‚å¯Ÿå¯¹GDPã€ä¼ä¸šæŠ•èµ„ã€å°±ä¸šç­‰å®è§‚ç»æµæŒ‡æ ‡çš„å½±å“ã€‚',
+        category: 'è´¢æ”¿ç¨æ”¶',
+        background: '## æ”¿ç­–èƒŒæ™¯\n\nç¨æ”¶æ”¿ç­–æ˜¯å›½å®¶å®è§‚è°ƒæ§çš„é‡è¦å·¥å…·ã€‚å½“å‰æˆ‘å›½ç»æµé¢ä¸´ä¸‹è¡Œå‹åŠ›ï¼Œå¦‚ä½•é€šè¿‡ç¨æ”¶æ”¿ç­–çš„è°ƒæ•´"å‡ç¨é™è´¹ã€ä¼˜åŒ–ç»“æ„"æˆä¸ºå½“å‰é¢ä¸´çš„å…³é”®é—®é¢˜ã€‚\n\n## å®éªŒç›®æ ‡\n\né€šè¿‡è°ƒæ•´ä¸åŒçš„ç¨æ”¶å·¥å…·å‚æ•°ï¼Œè§‚å¯Ÿå„é¡¹å®è§‚ç»æµæŒ‡æ ‡çš„å˜åŒ–è¶‹åŠ¿ï¼Œç†è§£ç¨æ”¶æ”¿ç­–å¯¹ç»æµè¿è¡Œçš„å½±å“æœºåˆ¶ã€‚',
         config: JSON.stringify(this.taxPolicyCase()),
       },
       {
-        title: '»·¾³¹æÖÆÕş²ßÓë¾­¼Ã·¢Õ¹µÄÆ½ºâ',
-        description: 'Ì½Ë÷ÅÅ·Å±ê×¼¡¢ÎÛÈ¾Ë°¡¢ÂÌÉ«²¹ÌùµÈ»·¾³Õş²ß¹¤¾ß£¬ÈçºÎÔÚ¸ÄÉÆ»·¾³ÖÊÁ¿µÄÍ¬Ê±´Ù½ø²úÒµÉı¼¶ºÍ¾ÍÒµ¡£',
-        category: '»·¾³Õş²ß',
-        background: '## °¸Àı±³¾°\n\n¾­¼Ã·¢Õ¹Óë»·¾³±£»¤Ö®¼äµÄÆ½ºâÊÇ¿É³ÖĞø·¢Õ¹µÄºËĞÄÌôÕ½¡£',
+        title: 'ç¯å¢ƒä¿æŠ¤ä¸ç»æµå‘å±•çš„å¹³è¡¡',
+        description: 'æ¢ç´¢æ’æ”¾æ ‡å‡†ã€æ±¡æŸ“ç¨ã€ç»¿è‰²è¡¥è´´ç­‰ç¯å¢ƒæ”¿ç­–å·¥å…·ï¼Œå¦‚ä½•åœ¨æ”¹å–„ç¯å¢ƒè´¨é‡çš„åŒæ—¶ä¿ƒè¿›ä¼ä¸šè½¬å‹å’Œå°±ä¸šã€‚',
+        category: 'ç¯å¢ƒæ”¿ç­–',
+        background: '## æ”¿ç­–èƒŒæ™¯\n\nç»æµå‘å±•ä¸ç¯å¢ƒä¿æŠ¤ä¹‹é—´çš„å¹³è¡¡æ˜¯å¯æŒç»­å‘å±•çš„æ ¸å¿ƒæŒ‘æˆ˜ã€‚å¦‚ä½•åœ¨ä¿æŒç»æµå¢é•¿çš„åŒæ—¶æ”¹å–„ç¯å¢ƒè´¨é‡ï¼Œæ˜¯å„å›½æ”¿åºœé¢ä¸´çš„é‡è¦æ”¿ç­–é—®é¢˜ã€‚',
         config: JSON.stringify(this.environmentCase()),
       },
       {
-        title: 'Éç»á±£ÕÏÖ§³öÓëÃñÉú¸ÄÉÆ',
-        description: 'µ÷ÕûÉç»á±£ÕÏÖ§³ö¡¢×îµÍ¹¤×Ê¡¢Ê§Òµ½ğÌæ´úÂÊºÍÒ½ÁÆ±£ÕÏ¸²¸ÇÃæ£¬ÆÀ¹À¶ÔÆ¶À§ÂÊ¡¢Éç»áÎÈ¶¨ºÍ²ÆÕş¿É³ÖĞøĞÔµÄ×ÛºÏÓ°Ïì¡£',
-        category: 'Éç»á±£ÕÏ',
-        background: '## °¸Àı±³¾°\n\nÍêÉÆµÄÉç»á±£ÕÏÌåÏµÊÇÃñÉú¸£ìíµÄÖØÒª±£ÕÏ¡£',
+        title: 'ç¤¾ä¼šä¿éšœæ”¯å‡ºä¸ç¤¾ä¼šç¨³å®š',
+        description: 'è°ƒæ•´ç¤¾ä¼šä¿éšœæ”¯å‡ºã€æœ€ä½å·¥èµ„ã€å¤±ä¸šæ•‘æµé‡‘å’ŒåŒ»ç–—ä¿éšœè¦†ç›–ç‡ï¼Œè¯„ä¼°å¯¹è´«å›°ç‡ã€ç¤¾ä¼šç¨³å®šå’Œè´¢æ”¿å¯æŒç»­æ€§çš„ç»¼åˆå½±å“ã€‚',
+        category: 'ç¤¾ä¼šä¿éšœ',
+        background: '## æ”¿ç­–èƒŒæ™¯\n\nå®Œå–„çš„ç¤¾ä¼šä¿éšœä½“ç³»æ˜¯äººæ°‘ç”Ÿæ´»çš„é‡è¦ä¿éšœã€‚åœ¨äººå£è€é¾„åŒ–åŠ é€Ÿçš„èƒŒæ™¯ä¸‹ï¼Œå¦‚ä½•å¹³è¡¡ä¿éšœæ°´å¹³ä¸è´¢æ”¿å¯æŒç»­æ€§æˆä¸ºæ”¿ç­–åˆ¶å®šè€…å¿…é¡»é¢å¯¹çš„å…³é”®æŒ‘æˆ˜ã€‚',
         config: JSON.stringify(this.welfareCase()),
       },
       {
-        title: '·¿µØ²úµ÷¿ØÕş²ßÓëÊĞ³¡ÎÈ¶¨',
-        description: 'ÔËÓÃ·¿²úË°¡¢ÍÁµØ¹©Ó¦¡¢·¿´ûÀûÂÊºÍÏŞ¹ºÕş²ßµÈ¹¤¾ß£¬ÊµÏÖ"·¿×¡²»³´"Ä¿±ê£¬´Ù½ø·¿µØ²úÊĞ³¡½¡¿µ·¢Õ¹¡£',
-        category: '×¡·¿Õş²ß',
-        background: '## °¸Àı±³¾°\n\n·¿µØ²úÊĞ³¡µÄÆ½ÎÈ½¡¿µ·¢Õ¹¹ØÏµµ½¹úÃñ¾­¼ÃÈ«¾ÖºÍÈËÃñÈºÖÚµÄÇĞÉíÀûÒæ¡£',
+        title: 'æˆ¿åœ°äº§è°ƒæ§ä¸å¸‚åœºç¨³å®š',
+        description: 'è¿ç”¨æˆ¿äº§ç¨ã€åœŸåœ°ä¾›åº”ã€è´·æ¬¾åˆ©ç‡å’Œé™è´­æ”¿ç­–ç­‰å·¥å…·ï¼Œå®ç°"ä½æœ‰æ‰€å±…"ç›®æ ‡ï¼Œä¿ƒè¿›æˆ¿åœ°äº§å¸‚åœºå¥åº·å‘å±•ã€‚',
+        category: 'ä½æˆ¿æ”¿ç­–',
+        background: '## æ”¿ç­–èƒŒæ™¯\n\næˆ¿åœ°äº§å¸‚åœºçš„å¹³ç¨³å¥åº·å‘å±•å…³ç³»ç»æµå…¨å±€å’Œäººæ°‘ç¾¤ä¼—çš„åˆ‡èº«åˆ©ç›Šã€‚å¦‚ä½•é€šè¿‡æ”¿ç­–å·¥å…·ç»„åˆå®ç°"æˆ¿ä½ä¸ç‚’"çš„ç›®æ ‡ï¼Œæ˜¯æœ¬å®éªŒæ¢è®¨çš„é‡ç‚¹ã€‚',
         config: JSON.stringify(this.housingCase()),
       },
       {
-        title: '¿Æ¼¼´´ĞÂ¼¤ÀøÕş²ßÓë²úÒµÉı¼¶',
-        description: 'Í¨¹ıÑĞ·¢²¹Ìù¡¢ÖªÊ¶²úÈ¨±£»¤¡¢½ÌÓıÍ¶ÈëºÍÈË²ÅÒı½øÕş²ß£¬ÍÆ¶¯¿Æ¼¼´´ĞÂºÍ²úÒµ½á¹¹Éı¼¶¡£',
-        category: '¿Æ¼¼Õş²ß',
-        background: '## °¸Àı±³¾°\n\n¿Æ¼¼´´ĞÂÊÇÒıÁì·¢Õ¹µÄµÚÒ»¶¯Á¦¡£',
+        title: 'ç§‘æŠ€åˆ›æ–°é©±åŠ¨äº§ä¸šå‡çº§',
+        description: 'é€šè¿‡ç ”å‘è¡¥è´´ã€çŸ¥è¯†äº§æƒä¿æŠ¤ã€æ•™è‚²æŠ•èµ„å’Œäººæ‰å¸å¼•æ”¿ç­–ï¼Œæ¨åŠ¨ç§‘æŠ€åˆ›æ–°å’Œäº§ä¸šç»“æ„å‡çº§ã€‚',
+        category: 'ç§‘æŠ€æ”¿ç­–',
+        background: '## æ”¿ç­–èƒŒæ™¯\n\nç§‘æŠ€åˆ›æ–°æ˜¯å¼•é¢†å‘å±•çš„ç¬¬ä¸€åŠ¨åŠ›ã€‚åœ¨å½“å‰å…¨çƒç»æµç«äº‰åŠ å‰§çš„èƒŒæ™¯ä¸‹ï¼Œå¦‚ä½•é€šè¿‡æ”¿ç­–ç»„åˆæ‹³æå‡å›½å®¶åˆ›æ–°èƒ½åŠ›ï¼Œæ¨åŠ¨äº§ä¸šå‘ä»·å€¼é“¾é«˜ç«¯æ”€å‡ï¼Œæ˜¯æ”¿ç­–åˆ¶å®šè€…å…³æ³¨çš„æ ¸å¿ƒè®®é¢˜ã€‚',
         config: JSON.stringify(this.innovationCase()),
       },
       {
-        title: 'HeroPro Ó¦¼±¾ö²ßÏìÓ¦',
-        description: 'Ä£Äâ×ÔÈ»ÔÖº¦Ó¦¼±ÏìÓ¦ÖĞµÄ×ÊÔ´µ÷¶È¡¢ÈËÔ±ÊèÉ¢ºÍÎ£»ú¹µÍ¨²ßÂÔ£¬×î´óÏŞ¶È¼õÉÙÈËÔ±ÉËÍöºÍ¾­¼ÃËğÊ§¡£',
-        category: 'Ó¦¼±¹ÜÀí',
-        background: '## °¸Àı±³¾°\n\nÃæ¶ÔÍ»·¢×ÔÈ»ÔÖº¦£¨ÈçµØÕğ¡¢ºéÀÔ£©£¬Õş¸®µÄÓ¦¼±ÏìÓ¦¾ö²ßÖ±½Ó¹ØÏµµ½ÈËÃñÉúÃü²Æ²ú°²È«¡£',
+        title: 'HeroPro åº”æ€¥ç¾å®³å“åº”',
+        description: 'æ¨¡æ‹Ÿè‡ªç„¶ç¾å®³åº”æ€¥å“åº”ä¸­çš„èµ„æºè°ƒåº¦ã€äººå‘˜ç–æ•£å’Œå±æœºæ²Ÿé€šç­–ç•¥ï¼Œæœ€å¤§é™åº¦å‡å°‘äººå‘˜ä¼¤äº¡å’Œç»æµæŸå¤±ã€‚',
+        category: 'åº”æ€¥ç®¡ç†',
+        background: '## æ”¿ç­–èƒŒæ™¯\n\nçªå‘æ€§è‡ªç„¶ç¾å®³ï¼ˆåœ°éœ‡ã€æ´ªæ¶ã€å°é£ï¼‰çš„åº”æ€¥å“åº”æ•ˆç‡ç›´æ¥å…³ç³»äººæ°‘ç¾¤ä¼—ç”Ÿå‘½è´¢äº§å®‰å…¨ã€‚å¦‚ä½•ç§‘å­¦é…ç½®æœ‰é™çš„åº”æ€¥èµ„æºï¼Œæ˜¯æœ¬æ¡ˆä¾‹æ¢è®¨çš„æ ¸å¿ƒé—®é¢˜ã€‚',
         config: JSON.stringify(this.heroProCase()),
       },
       {
-        title: 'GIS ÖÇ»Û³ÇÊĞ¹ÜÀí',
-        description: 'ÔËÓÃÎïÁªÍø´«¸ĞÆ÷¡¢´óÊı¾İ·ÖÎöºÍÈË¹¤ÖÇÄÜ¼¼Êõ£¬ÓÅ»¯³ÇÊĞ½»Í¨¡¢ÄÜÔ´¡¢»·¾³ºÍ¹«¹²·şÎñÏµÍ³¡£',
-        category: 'ÖÇ»Û³ÇÊĞ',
-        background: '## °¸Àı±³¾°\n\nÖÇ»Û³ÇÊĞÀûÓÃÊı×Ö¼¼ÊõÌáÉı³ÇÊĞÖÎÀíÄÜÁ¦ºÍ¾ÓÃñÉú»îÖÊÁ¿¡£',
+        title: 'GIS æ™ºæ…§åŸå¸‚ç®¡ç†',
+        description: 'éƒ¨ç½²ç‰©è”ç½‘ä¼ æ„Ÿå™¨ã€äººå·¥æ™ºèƒ½åˆ†æå’Œæ•°æ®å¼€æ”¾å¹³å°ï¼Œä¼˜åŒ–åŸå¸‚äº¤é€šã€èƒ½æºæ¶ˆè€—å’Œå…¬å…±æœåŠ¡ç³»ç»Ÿã€‚',
+        category: 'æ™ºæ…§åŸå¸‚',
+        background: '## æ”¿ç­–èƒŒæ™¯\n\næ™ºæ…§åŸå¸‚åˆ©ç”¨æ•°å­—æŠ€æœ¯æå‡åŸå¸‚æ²»ç†èƒ½åŠ›å’Œå±…æ°‘ç”Ÿæ´»è´¨é‡ã€‚æœ¬æ¡ˆä¾‹æ¢è®¨å¦‚ä½•é€šè¿‡ä¸åŒæŠ€æœ¯æ–¹æ¡ˆçš„ç»„åˆï¼Œå®ç°åŸå¸‚è¿è¡Œæ•ˆç‡çš„æœ€å¤§åŒ–ã€‚',
         config: JSON.stringify(this.gisCase()),
       },
     ];
   }
 
-  private taxPolicyCase() { return { parameters: [{ id: 'vat_rate', name: 'vat_rate', label: 'ÔöÖµË°ÂÊ', type: 'slider', min: 5, max: 25, step: 0.5, default: 13, unit: '%' }, { id: 'corp_tax_rate', name: 'corp_tax_rate', label: 'ÆóÒµËùµÃË°ÂÊ', type: 'slider', min: 10, max: 35, step: 1, default: 25, unit: '%' }, { id: 'small_tax_break', name: 'small_tax_break', label: 'Ğ¡Î¢ÆóÒµ¼õÃâÁ¦¶È', type: 'slider', min: 0, max: 100, step: 5, default: 50, unit: '%' }, { id: 'tax_zone', name: 'tax_zone', label: 'Ë°ÊÕÓÅ»İÇøÕş²ß', type: 'select', options: [{ label: 'ÎŞÓÅ»İÇø', value: 0 }, { label: 'ÆÕÍ¨ÓÅ»İÇø', value: 1 }, { label: 'ÖØµãÓÅ»İÇø', value: 2 }, { label: 'ÌØÇøÕş²ß', value: 3 }], default: 0, unit: '' }], indicators: [{ id: 'gdp_growth', name: 'gdp_growth', label: 'GDPÔö³¤ÂÊ', unit: '%', format: 'percent', higherIsBetter: true }, { id: 'gov_revenue', name: 'gov_revenue', label: 'Õş¸®²ÆÕşÊÕÈë', unit: 'ÒÚÔª', format: 'number', higherIsBetter: false }, { id: 'gini', name: 'gini', label: '»ùÄáÏµÊı', unit: '', format: 'number', higherIsBetter: false }, { id: 'business_investment', name: 'business_investment', label: 'ÆóÒµÍ¶×ÊÖ¸Êı', unit: '', format: 'number', higherIsBetter: true }, { id: 'employment', name: 'employment', label: '¾ÍÒµÂÊ', unit: '%', format: 'percent', higherIsBetter: true }, { id: 'consumer_price', name: 'consumer_price', label: 'Ïû·ÑÕß¼Û¸ñÖ¸Êı', unit: '', format: 'number', higherIsBetter: false }], formulas: [{ indicatorId: 'gdp_growth', expression: '12 - 0.25 * (params.vat_rate - 13) - 0.15 * (params.corp_tax_rate - 25) + 0.3 * (params.small_tax_break / 50) + 0.5 * params.tax_zone + (Math.sin(params.vat_rate * 0.2) * 0.5)' }, { indicatorId: 'gov_revenue', expression: '800 + params.vat_rate * 20 + params.corp_tax_rate * 15 - params.small_tax_break * 2 + params.tax_zone * 30 + (Math.random() * 10 - 5)' }, { indicatorId: 'gini', expression: '0.45 - 0.002 * params.small_tax_break + 0.003 * params.vat_rate - 0.01 * params.tax_zone + (Math.sin(params.corp_tax_rate * 0.05) * 0.02)' }, { indicatorId: 'business_investment', expression: '100 - 2 * params.vat_rate - 1.5 * params.corp_tax_rate + 0.5 * params.small_tax_break + 10 * params.tax_zone + (Math.cos(params.vat_rate * 0.1) * 3)' }, { indicatorId: 'employment', expression: '95 + 0.1 * params.small_tax_break - 0.2 * params.vat_rate - 0.1 * params.corp_tax_rate + 1 * params.tax_zone + (Math.sin(params.corp_tax_rate * 0.05) * 1)' }, { indicatorId: 'consumer_price', expression: '100 + 0.5 * (params.vat_rate - 13) + 0.3 * (params.corp_tax_rate - 25) - 0.1 * params.small_tax_break + 2 * params.tax_zone + (Math.random() * 2 - 1)' }] }; }
+  private taxPolicyCase() {
+    return {
+      parameters: [
+        { id: 'vat_rate', name: 'vat_rate', label: 'å¢å€¼ç¨ç‡', type: 'slider', min: 5, max: 25, step: 0.5, default: 13, unit: '%' },
+        { id: 'corp_tax_rate', name: 'corp_tax_rate', label: 'ä¼ä¸šæ‰€å¾—ç¨ç‡', type: 'slider', min: 10, max: 35, step: 1, default: 25, unit: '%' },
+        { id: 'small_tax_break', name: 'small_tax_break', label: 'å°å¾®ä¼ä¸šä¼˜æƒ å¹…åº¦', type: 'slider', min: 0, max: 100, step: 5, default: 50, unit: '%' },
+        { id: 'tax_zone', name: 'tax_zone', label: 'ç¨æ”¶ä¼˜æƒ åŒºåŸŸ', type: 'select', options: [
+          { label: 'æ— ä¼˜æƒ åŒº', value: 0 }, { label: 'æ™®é€šä¼˜æƒ åŒº', value: 1 }, { label: 'é‡ç‚¹ä¼˜æƒ åŒº', value: 2 }, { label: 'è‡ªè´¸è¯•éªŒåŒº', value: 3 }
+        ], default: 0, unit: '' },
+      ],
+      indicators: [
+        { id: 'gdp_growth', name: 'gdp_growth', label: 'GDPå¢é•¿ç‡', unit: '%', format: 'percent', higherIsBetter: true },
+        { id: 'gov_revenue', name: 'gov_revenue', label: 'æ”¿åºœè´¢æ”¿æ”¶å…¥', unit: 'äº¿å…ƒ', format: 'number', higherIsBetter: false },
+        { id: 'gini', name: 'gini', label: 'åŸºå°¼ç³»æ•°', unit: '', format: 'number', higherIsBetter: false },
+        { id: 'business_investment', name: 'business_investment', label: 'ä¼ä¸šæŠ•èµ„æŒ‡æ•°', unit: '', format: 'number', higherIsBetter: true },
+        { id: 'employment', name: 'employment', label: 'å°±ä¸šç‡', unit: '%', format: 'percent', higherIsBetter: true },
+        { id: 'consumer_price', name: 'consumer_price', label: 'æ¶ˆè´¹è€…ä»·æ ¼æŒ‡æ•°', unit: '', format: 'number', higherIsBetter: false },
+      ],
+      formulas: [
+        { indicatorId: 'gdp_growth', expression: '12 - 0.25 * (params.vat_rate - 13) - 0.15 * (params.corp_tax_rate - 25) + 0.3 * (params.small_tax_break / 50) + 0.5 * params.tax_zone + (Math.sin(params.vat_rate * 0.2) * 0.5)' },
+        { indicatorId: 'gov_revenue', expression: '800 + params.vat_rate * 20 + params.corp_tax_rate * 15 - params.small_tax_break * 2 + params.tax_zone * 30 + (Math.random() * 10 - 5)' },
+        { indicatorId: 'gini', expression: '0.45 - 0.002 * params.small_tax_break + 0.003 * params.vat_rate - 0.01 * params.tax_zone + (Math.sin(params.corp_tax_rate * 0.05) * 0.02)' },
+        { indicatorId: 'business_investment', expression: '60 + 0.5 * (25 - params.corp_tax_rate) + 0.2 * params.small_tax_break + 5 * params.tax_zone - 0.3 * params.vat_rate + (Math.cos(params.corp_tax_rate * 0.1) * 2)' },
+        { indicatorId: 'employment', expression: '94 + 0.05 * (25 - params.corp_tax_rate) + 0.02 * params.small_tax_break + 0.01 * (13 - params.vat_rate) + 1 * params.tax_zone + (Math.sin(params.vat_rate * 0.15) * 0.3)' },
+        { indicatorId: 'consumer_price', expression: '102 - 0.1 * params.vat_rate + 0.05 * params.corp_tax_rate + 0.2 * params.tax_zone + (Math.random() * 0.5)' },
+      ],
+    };
+  }
 
-  private environmentCase() { return { parameters: [{ id: 'emission_standard', name: 'emission_standard', label: 'ÅÅ·Å±ê×¼ÑÏ¸ñ¶È', type: 'slider', min: 1, max: 10, step: 0.5, default: 5, unit: '¼¶' }, { id: 'pollution_tax', name: 'pollution_tax', label: 'ÎÛÈ¾Ë°Ë°ÂÊ', type: 'slider', min: 0, max: 500, step: 10, default: 100, unit: 'Ôª/¶Ö' }, { id: 'green_subsidy', name: 'green_subsidy', label: 'ÂÌÉ«¼¼Êõ²¹Ìù', type: 'slider', min: 0, max: 200, step: 10, default: 50, unit: 'ÒÚÔª' }, { id: 'enforce_strictness', name: 'enforce_strictness', label: 'Ö´·¨ÑÏ¸ñ¶È', type: 'select', options: [{ label: '¿íËÉ', value: 0 }, { label: 'Ò»°ã', value: 1 }, { label: 'ÑÏ¸ñ', value: 2 }, { label: '¼«ÑÏ', value: 3 }], default: 1, unit: '' }], indicators: [{ id: 'air_quality', name: 'air_quality', label: '¿ÕÆøÖÊÁ¿Ö¸Êı(AQI)', unit: '', format: 'number', higherIsBetter: false }, { id: 'industry_output', name: 'industry_output', label: '¹¤Òµ×Ü²úÖµ', unit: 'ÒÚÔª', format: 'number', higherIsBetter: true }, { id: 'green_jobs', name: 'green_jobs', label: 'ÂÌÉ«¾ÍÒµ¸ÚÎ»', unit: 'Íò¸ö', format: 'number', higherIsBetter: true }, { id: 'env_revenue', name: 'env_revenue', label: '»·¾³Ë°ÊÕÈë', unit: 'ÒÚÔª', format: 'number', higherIsBetter: false }, { id: 'public_satisfaction', name: 'public_satisfaction', label: '¹«ÖÚÂúÒâ¶È', unit: '%', format: 'percent', higherIsBetter: true }], formulas: [{ indicatorId: 'air_quality', expression: '80 - 5 * params.emission_standard - 0.05 * params.pollution_tax + 0.1 * params.green_subsidy - 8 * params.enforce_strictness + (Math.sin(params.emission_standard * 0.5) * 3)' }, { indicatorId: 'industry_output', expression: '5000 - 100 * params.emission_standard - 2 * params.pollution_tax + 15 * params.green_subsidy - 50 * params.enforce_strictness + 200 * Math.log(params.emission_standard + 1)' }, { indicatorId: 'green_jobs', expression: '20 + 3 * params.emission_standard + 0.15 * params.green_subsidy + 5 * params.enforce_strictness + (Math.random() * 2)' }, { indicatorId: 'env_revenue', expression: '200 + params.pollution_tax * 0.5 + 30 * params.enforce_strictness - params.green_subsidy * 0.2 + (Math.cos(params.pollution_tax * 0.005) * 10)' }, { indicatorId: 'public_satisfaction', expression: '50 + 5 * params.emission_standard + 0.05 * params.green_subsidy + 10 * params.enforce_strictness - 0.03 * params.pollution_tax + (Math.sin(params.green_subsidy * 0.01) * 3)' }] }; }
+  private environmentCase() {
+    return {
+      parameters: [
+        { id: 'emission_standard', name: 'emission_standard', label: 'æ’æ”¾æ ‡å‡†ä¸¥æ ¼åº¦', type: 'slider', min: 1, max: 10, step: 0.5, default: 5, unit: 'çº§' },
+        { id: 'pollution_tax', name: 'pollution_tax', label: 'æ±¡æŸ“ç¨ç¨ç‡', type: 'slider', min: 0, max: 500, step: 10, default: 100, unit: 'å…ƒ/å¨' },
+        { id: 'green_subsidy', name: 'green_subsidy', label: 'ç»¿è‰²è¡¥è´´é‡‘é¢', type: 'slider', min: 0, max: 200, step: 10, default: 50, unit: 'äº¿å…ƒ' },
+        { id: 'enforce_strictness', name: 'enforce_strictness', label: 'æ‰§æ³•ä¸¥æ ¼åº¦', type: 'select', options: [
+          { label: 'å®½æ¾', value: 0 }, { label: 'ä¸€èˆ¬', value: 1 }, { label: 'ä¸¥æ ¼', value: 2 }, { label: 'æä¸¥', value: 3 }
+        ], default: 1, unit: '' },
+      ],
+      indicators: [
+        { id: 'air_quality', name: 'air_quality', label: 'ç©ºæ°”è´¨é‡æŒ‡æ•°(AQI)', unit: '', format: 'number', higherIsBetter: false },
+        { id: 'industry_output', name: 'industry_output', label: 'å·¥ä¸šæ€»äº§å€¼', unit: 'äº¿å…ƒ', format: 'number', higherIsBetter: true },
+        { id: 'green_jobs', name: 'green_jobs', label: 'ç»¿è‰²å°±ä¸šå²—ä½', unit: 'ä¸‡ä¸ª', format: 'number', higherIsBetter: true },
+        { id: 'env_revenue', name: 'env_revenue', label: 'ç¯å¢ƒç¨æ”¶å…¥', unit: 'äº¿å…ƒ', format: 'number', higherIsBetter: false },
+        { id: 'public_satisfaction', name: 'public_satisfaction', label: 'å…¬ä¼—æ»¡æ„åº¦', unit: '%', format: 'percent', higherIsBetter: true },
+      ],
+      formulas: [
+        { indicatorId: 'air_quality', expression: '80 - 5 * params.emission_standard - 0.05 * params.pollution_tax + 0.1 * params.green_subsidy - 8 * params.enforce_strictness + (Math.sin(params.emission_standard * 0.5) * 3)' },
+        { indicatorId: 'industry_output', expression: '5000 - 100 * params.emission_standard - 2 * params.pollution_tax + 15 * params.green_subsidy - 50 * params.enforce_strictness + 200 * Math.log(params.emission_standard + 1)' },
+        { indicatorId: 'green_jobs', expression: '20 + 3 * params.emission_standard + 0.15 * params.green_subsidy + 5 * params.enforce_strictness + (Math.random() * 2)' },
+        { indicatorId: 'env_revenue', expression: '0 + params.pollution_tax * 0.5 + params.emission_standard * 10 + (Math.sin(params.pollution_tax * 0.01) * 20)' },
+        { indicatorId: 'public_satisfaction', expression: '50 - params.air_quality * 0.5 + params.green_jobs * 0.5 + 5 * params.enforce_strictness + (Math.random() * 5)' },
+      ],
+    };
+  }
 
-  private welfareCase() { return { parameters: [{ id: 'welfare_spending', name: 'welfare_spending', label: 'Éç»á±£ÕÏÖ§³ö', type: 'slider', min: 100, max: 2000, step: 50, default: 500, unit: 'ÒÚÔª' }, { id: 'min_wage', name: 'min_wage', label: '×îµÍ¹¤×Ê±ê×¼', type: 'slider', min: 2000, max: 6000, step: 100, default: 3000, unit: 'Ôª/ÔÂ' }, { id: 'unemployment_benefit', name: 'unemployment_benefit', label: 'Ê§Òµ½ğÌæ´úÂÊ', type: 'slider', min: 20, max: 80, step: 5, default: 40, unit: '%' }, { id: 'healthcare_coverage', name: 'healthcare_coverage', label: 'Ò½ÁÆ±£ÕÏ¸²¸ÇÂÊ', type: 'select', options: [{ label: '»ù´¡¸²¸Ç(60%)', value: 60 }, { label: 'ÖĞµÈ¸²¸Ç(75%)', value: 75 }, { label: 'È«Ãæ¸²¸Ç(90%)', value: 90 }, { label: 'È«ÃñÃâ·Ñ(100%)', value: 100 }], default: 75, unit: '%' }], indicators: [{ id: 'poverty_rate', name: 'poverty_rate', label: 'Æ¶À§ÂÊ', unit: '%', format: 'percent', higherIsBetter: false }, { id: 'fiscal_deficit', name: 'fiscal_deficit', label: '²ÆÕş³à×ÖÂÊ', unit: '%', format: 'percent', higherIsBetter: false }, { id: 'life_expectancy', name: 'life_expectancy', label: 'ÈË¾ùÔ¤ÆÚÊÙÃü', unit: 'Ëê', format: 'number', higherIsBetter: true }, { id: 'social_stability', name: 'social_stability', label: 'Éç»áÎÈ¶¨Ö¸Êı', unit: '', format: 'number', higherIsBetter: true }, { id: 'labor_participation', name: 'labor_participation', label: 'ÀÍ¶¯Á¦²ÎÓëÂÊ', unit: '%', format: 'percent', higherIsBetter: true }], formulas: [{ indicatorId: 'poverty_rate', expression: '15 - 0.005 * params.welfare_spending - 0.001 * params.min_wage - 0.05 * params.unemployment_benefit - 0.05 * params.healthcare_coverage + 5 + (Math.sin(params.welfare_spending * 0.002) * 0.5)' }, { indicatorId: 'fiscal_deficit', expression: '3 + 0.002 * params.welfare_spending + 0.0003 * params.min_wage + 0.01 * params.unemployment_benefit + 0.02 * params.healthcare_coverage - 1.5 + (Math.cos(params.welfare_spending * 0.001) * 0.3)' }, { indicatorId: 'life_expectancy', expression: '76 + 0.001 * params.welfare_spending + 0.0002 * params.min_wage + 0.03 * params.healthcare_coverage - 0.01 * params.unemployment_benefit + (Math.sin(params.healthcare_coverage * 0.01) * 0.5)' }, { indicatorId: 'social_stability', expression: '50 + 0.02 * params.welfare_spending + 0.003 * params.min_wage + 0.2 * params.unemployment_benefit + 0.3 * params.healthcare_coverage + (Math.random() * 3)' }, { indicatorId: 'labor_participation', expression: '60 + 0.005 * params.welfare_spending + 0.002 * params.min_wage - 0.15 * params.unemployment_benefit + 0.1 * params.healthcare_coverage + (Math.sin(params.min_wage * 0.0003) * 2)' }] }; }
+  private welfareCase() {
+    return {
+      parameters: [
+        { id: 'welfare_spending', name: 'welfare_spending', label: 'ç¤¾ä¼šä¿éšœæ”¯å‡º', type: 'slider', min: 100, max: 2000, step: 50, default: 500, unit: 'äº¿å…ƒ' },
+        { id: 'min_wage', name: 'min_wage', label: 'æœ€ä½å·¥èµ„æ ‡å‡†', type: 'slider', min: 2000, max: 6000, step: 100, default: 3000, unit: 'å…ƒ/æœˆ' },
+        { id: 'unemployment_benefit', name: 'unemployment_benefit', label: 'å¤±ä¸šæ•‘æµæ›¿ä»£ç‡', type: 'slider', min: 20, max: 80, step: 5, default: 40, unit: '%' },
+        { id: 'healthcare_coverage', name: 'healthcare_coverage', label: 'åŒ»ç–—ä¿éšœè¦†ç›–ç‡', type: 'select', options: [
+          { label: 'åŸºç¡€è¦†ç›–(60%)', value: 60 }, { label: 'ä¸­ç­‰è¦†ç›–(75%)', value: 75 }, { label: 'å…¨é¢è¦†ç›–(90%)', value: 90 }, { label: 'å…¨æ°‘å…è´¹(100%)', value: 100 }
+        ], default: 75, unit: '%' },
+      ],
+      indicators: [
+        { id: 'poverty_rate', name: 'poverty_rate', label: 'è´«å›°ç‡', unit: '%', format: 'percent', higherIsBetter: false },
+        { id: 'fiscal_deficit', name: 'fiscal_deficit', label: 'è´¢æ”¿èµ¤å­—ç‡', unit: '%', format: 'percent', higherIsBetter: false },
+        { id: 'life_expectancy', name: 'life_expectancy', label: 'äººå‡é¢„æœŸå¯¿å‘½', unit: 'å²', format: 'number', higherIsBetter: true },
+        { id: 'social_stability', name: 'social_stability', label: 'ç¤¾ä¼šç¨³å®šæŒ‡æ•°', unit: '', format: 'number', higherIsBetter: true },
+        { id: 'labor_participation', name: 'labor_participation', label: 'åŠ³åŠ¨å‚ä¸ç‡', unit: '%', format: 'percent', higherIsBetter: true },
+      ],
+      formulas: [
+        { indicatorId: 'poverty_rate', expression: '15 - 0.005 * params.welfare_spending - 0.001 * params.min_wage - 0.05 * params.unemployment_benefit - 0.05 * params.healthcare_coverage + 5 + (Math.sin(params.welfare_spending * 0.002) * 0.5)' },
+        { indicatorId: 'fiscal_deficit', expression: '3 + 0.002 * params.welfare_spending + 0.0003 * params.min_wage + 0.01 * params.unemployment_benefit + 0.02 * params.healthcare_coverage - 1.5 + (Math.cos(params.welfare_spending * 0.001) * 0.3)' },
+        { indicatorId: 'life_expectancy', expression: '76 + 0.001 * params.welfare_spending + 0.0002 * params.min_wage + 0.02 * params.unemployment_benefit + 0.03 * params.healthcare_coverage + (Math.sin(params.welfare_spending * 0.001) * 0.3)' },
+        { indicatorId: 'social_stability', expression: '5 + 0.002 * params.welfare_spending + 0.0005 * params.min_wage + 0.02 * params.unemployment_benefit + 0.02 * params.healthcare_coverage - 0.01 * (15 - 0.005 * params.welfare_spending) + (Math.random() * 0.5)' },
+        { indicatorId: 'labor_participation', expression: '65 - 0.001 * params.welfare_spending + 0.0005 * params.min_wage - 0.05 * params.unemployment_benefit + 0.05 * params.healthcare_coverage + (Math.sin(params.min_wage * 0.0003) * 1)' },
+      ],
+    };
+  }
 
-  private housingCase() { return { parameters: [{ id: 'property_tax', name: 'property_tax', label: '·¿²úË°Ë°ÂÊ', type: 'slider', min: 0, max: 5, step: 0.1, default: 1, unit: '%' }, { id: 'land_supply', name: 'land_supply', label: '×¡Õ¬ÓÃµØ¹©Ó¦', type: 'slider', min: 100, max: 2000, step: 50, default: 500, unit: '¹«Çê' }, { id: 'mortgage_rate', name: 'mortgage_rate', label: '·¿´ûÀûÂÊ', type: 'slider', min: 2, max: 8, step: 0.25, default: 4.5, unit: '%' }, { id: 'purchase_restriction', name: 'purchase_restriction', label: 'ÏŞ¹ºÕş²ßÇ¿¶È', type: 'select', options: [{ label: 'ÎŞÏŞ¹º', value: 0 }, { label: 'ÎÂºÍÏŞ¹º', value: 1 }, { label: 'ÑÏ¸ñÏŞ¹º', value: 2 }, { label: '¼«ÑÏÏŞ¹º', value: 3 }], default: 0, unit: '' }], indicators: [{ id: 'housing_price', name: 'housing_price', label: '·¿¼ÛÖ¸Êı', unit: '', format: 'number', higherIsBetter: false }, { id: 'vacancy_rate', name: 'vacancy_rate', label: '×¡·¿¿ÕÖÃÂÊ', unit: '%', format: 'percent', higherIsBetter: false }, { id: 'local_revenue_land', name: 'local_revenue_land', label: 'ÍÁµØ³öÈÃÊÕÈë', unit: 'ÒÚÔª', format: 'currency', higherIsBetter: false }, { id: 'affordability', name: 'affordability', label: '¾ÓÃñ¹º·¿ÄÜÁ¦Ö¸Êı', unit: '', format: 'number', higherIsBetter: true }, { id: 'construction_employment', name: 'construction_employment', label: '½¨ÖşÒµ¾ÍÒµ', unit: 'ÍòÈË', format: 'number', higherIsBetter: true }], formulas: [{ indicatorId: 'housing_price', expression: '200 - 15 * params.property_tax - 0.05 * params.land_supply - 8 * params.mortgage_rate - 20 * params.purchase_restriction + 100 + (Math.sin(params.property_tax * 0.5) * 5)' }, { indicatorId: 'vacancy_rate', expression: '20 - 2 * params.property_tax + 0.005 * params.land_supply + 1.5 * params.mortgage_rate - 2 * params.purchase_restriction + (Math.cos(params.land_supply * 0.002) * 1)' }, { indicatorId: 'local_revenue_land', expression: '8000 - 300 * params.property_tax + params.land_supply * 4 - 200 * params.purchase_restriction + (Math.sin(params.land_supply * 0.001) * 100)' }, { indicatorId: 'affordability', expression: '40 + 5 * params.property_tax + 0.02 * params.land_supply - 3 * params.mortgage_rate + 10 * params.purchase_restriction + (Math.sin(params.mortgage_rate * 0.3) * 2)' }, { indicatorId: 'construction_employment', expression: '500 - 10 * params.property_tax + 0.1 * params.land_supply - 20 * params.mortgage_rate - 30 * params.purchase_restriction + (Math.cos(params.land_supply * 0.001) * 10)' }] }; }
+  private housingCase() {
+    return {
+      parameters: [
+        { id: 'property_tax', name: 'property_tax', label: 'æˆ¿äº§ç¨ç¨ç‡', type: 'slider', min: 0, max: 5, step: 0.1, default: 1, unit: '%' },
+        { id: 'land_supply', name: 'land_supply', label: 'ä½å®…ç”¨åœ°ä¾›åº”', type: 'slider', min: 100, max: 2000, step: 50, default: 500, unit: 'å…¬é¡·' },
+        { id: 'mortgage_rate', name: 'mortgage_rate', label: 'è´·æ¬¾åˆ©ç‡', type: 'slider', min: 2, max: 8, step: 0.25, default: 4.5, unit: '%' },
+        { id: 'purchase_restriction', name: 'purchase_restriction', label: 'é™è´­æ”¿ç­–å¼ºåº¦', type: 'select', options: [
+          { label: 'æ— é™è´­', value: 0 }, { label: 'æ¸©å’Œé™è´­', value: 1 }, { label: 'ä¸¥æ ¼é™è´­', value: 2 }, { label: 'å…¨é¢é™è´­', value: 3 }
+        ], default: 0, unit: '' },
+      ],
+      indicators: [
+        { id: 'housing_price', name: 'housing_price', label: 'æˆ¿ä»·æŒ‡æ•°', unit: '', format: 'number', higherIsBetter: false },
+        { id: 'vacancy_rate', name: 'vacancy_rate', label: 'ä½æˆ¿ç©ºç½®ç‡', unit: '%', format: 'percent', higherIsBetter: false },
+        { id: 'local_revenue_land', name: 'local_revenue_land', label: 'åœŸåœ°å‡ºè®©æ”¶å…¥', unit: 'äº¿å…ƒ', format: 'currency', higherIsBetter: false },
+        { id: 'affordability', name: 'affordability', label: 'å±…æ°‘è´­æˆ¿èƒ½åŠ›æŒ‡æ•°', unit: '', format: 'number', higherIsBetter: true },
+        { id: 'construction_employment', name: 'construction_employment', label: 'å»ºç­‘ä¸šå°±ä¸š', unit: 'ä¸‡äºº', format: 'number', higherIsBetter: true },
+      ],
+      formulas: [
+        { indicatorId: 'housing_price', expression: '200 - 15 * params.property_tax - 0.05 * params.land_supply - 8 * params.mortgage_rate - 20 * params.purchase_restriction + 100 + (Math.sin(params.property_tax * 0.5) * 5)' },
+        { indicatorId: 'vacancy_rate', expression: '20 - 2 * params.property_tax + 0.005 * params.land_supply + 1.5 * params.mortgage_rate - 2 * params.purchase_restriction + (Math.cos(params.land_supply * 0.002) * 1)' },
+        { indicatorId: 'local_revenue_land', expression: '8000 - 300 * params.property_tax + params.land_supply * 4 - 200 * params.purchase_restriction + (Math.sin(params.land_supply * 0.001) * 100)' },
+        { indicatorId: 'affordability', expression: '50 + 5 * params.property_tax + 0.02 * params.land_supply - 5 * params.mortgage_rate + 10 * params.purchase_restriction + (Math.cos(params.mortgage_rate * 0.2) * 2)' },
+        { indicatorId: 'construction_employment', expression: '500 - 20 * params.property_tax + 0.1 * params.land_supply - 10 * params.mortgage_rate - 30 * params.purchase_restriction + (Math.sin(params.land_supply * 0.001) * 10)' },
+      ],
+    };
+  }
 
-  private innovationCase() { return { parameters: [{ id: 'rd_subsidy', name: 'rd_subsidy', label: 'ÑĞ·¢²¹ÌùÁ¦¶È', type: 'slider', min: 0, max: 500, step: 10, default: 100, unit: 'ÒÚÔª' }, { id: 'patent_protection', name: 'patent_protection', label: 'ÖªÊ¶²úÈ¨±£»¤Ç¿¶È', type: 'slider', min: 1, max: 10, step: 0.5, default: 5, unit: '¼¶' }, { id: 'edu_investment', name: 'edu_investment', label: '½ÌÓıÍ¶Èë', type: 'slider', min: 2000, max: 10000, step: 100, default: 4000, unit: 'ÒÚÔª' }, { id: 'talent_attraction', name: 'talent_attraction', label: 'ÈË²ÅÒı½øÁ¦¶È', type: 'select', options: [{ label: '»ù´¡Õş²ß', value: 0 }, { label: 'ÖĞµÈÁ¦¶È', value: 1 }, { label: 'Ç¿Á¦Òı½ø', value: 2 }, { label: 'È«ÇòÒı²Å', value: 3 }], default: 0, unit: '' }], indicators: [{ id: 'patent_count', name: 'patent_count', label: '×¨ÀûÉêÇëÁ¿', unit: 'Íò¼ş', format: 'number', higherIsBetter: true }, { id: 'high_tech_output', name: 'high_tech_output', label: '¸ß¼¼Êõ²úÒµ²úÖµ', unit: 'ÒÚÔª', format: 'currency', higherIsBetter: true }, { id: 'rd_intensity', name: 'rd_intensity', label: 'ÑĞ·¢Í¶ÈëÇ¿¶È(R&D/GDP)', unit: '%', format: 'percent', higherIsBetter: true }, { id: 'talent_inflow', name: 'talent_inflow', label: '¸ß¶ËÈË²Å¾»Á÷Èë', unit: 'ÍòÈË', format: 'number', higherIsBetter: true }, { id: 'tech_innovation_index', name: 'tech_innovation_index', label: '×ÛºÏ¿Æ¼¼´´ĞÂÖ¸Êı', unit: '', format: 'number', higherIsBetter: true }], formulas: [{ indicatorId: 'patent_count', expression: '50 + 0.2 * params.rd_subsidy + 5 * params.patent_protection + 0.005 * params.edu_investment + 10 * params.talent_attraction + (Math.sin(params.rd_subsidy * 0.01) * 3)' }, { indicatorId: 'high_tech_output', expression: '15000 + 30 * params.rd_subsidy + 500 * params.patent_protection + 2 * params.edu_investment + 1000 * params.talent_attraction + (Math.cos(params.rd_subsidy * 0.005) * 200)' }, { indicatorId: 'rd_intensity', expression: '2.0 + 0.005 * params.rd_subsidy + 0.1 * params.patent_protection + 0.0002 * params.edu_investment + 0.2 * params.talent_attraction + (Math.random() * 0.1)' }, { indicatorId: 'talent_inflow', expression: '5 + 0.02 * params.rd_subsidy + 0.3 * params.patent_protection + 0.002 * params.edu_investment + 5 * params.talent_attraction + (Math.sin(params.talent_attraction * 1.5) * 0.5)' }, { indicatorId: 'tech_innovation_index', expression: '50 + 0.05 * params.rd_subsidy + 3 * params.patent_protection + 0.003 * params.edu_investment + 8 * params.talent_attraction + (Math.cos(params.rd_subsidy * 0.008) * 2)' }] }; }
+  private innovationCase() {
+    return {
+      parameters: [
+        { id: 'rd_subsidy', name: 'rd_subsidy', label: 'ç ”å‘è¡¥è´´é‡‘é¢', type: 'slider', min: 0, max: 500, step: 10, default: 100, unit: 'äº¿å…ƒ' },
+        { id: 'patent_protection', name: 'patent_protection', label: 'çŸ¥è¯†äº§æƒä¿æŠ¤å¼ºåº¦', type: 'slider', min: 1, max: 10, step: 0.5, default: 5, unit: 'çº§' },
+        { id: 'edu_investment', name: 'edu_investment', label: 'æ•™è‚²æŠ•èµ„', type: 'slider', min: 2000, max: 10000, step: 100, default: 4000, unit: 'äº¿å…ƒ' },
+        { id: 'talent_attraction', name: 'talent_attraction', label: 'äººæ‰å¸å¼•åŠ›', type: 'select', options: [
+          { label: 'åŸºç¡€å¸å¼•', value: 0 }, { label: 'ä¸­ç­‰å¸å¼•', value: 1 }, { label: 'å¼ºåŠ›å¸å¼•', value: 2 }, { label: 'å…¨çƒé¡¶å°–', value: 3 }
+        ], default: 0, unit: '' },
+      ],
+      indicators: [
+        { id: 'patent_count', name: 'patent_count', label: 'ä¸“åˆ©ç”³è¯·æ•°', unit: 'ä¸‡ä»¶', format: 'number', higherIsBetter: true },
+        { id: 'high_tech_output', name: 'high_tech_output', label: 'é«˜æŠ€æœ¯äº§ä¸šäº§å€¼', unit: 'äº¿å…ƒ', format: 'currency', higherIsBetter: true },
+        { id: 'rd_intensity', name: 'rd_intensity', label: 'ç ”å‘æŠ•å…¥å¼ºåº¦(R&D/GDP)', unit: '%', format: 'percent', higherIsBetter: true },
+        { id: 'talent_inflow', name: 'talent_inflow', label: 'é«˜ç«¯äººæ‰å‡€æµå…¥', unit: 'ä¸‡äºº', format: 'number', higherIsBetter: true },
+        { id: 'tech_innovation_index', name: 'tech_innovation_index', label: 'ç»¼åˆç§‘æŠ€åˆ›æ–°æŒ‡æ•°', unit: '', format: 'number', higherIsBetter: true },
+      ],
+      formulas: [
+        { indicatorId: 'patent_count', expression: '50 + 0.2 * params.rd_subsidy + 5 * params.patent_protection + 0.005 * params.edu_investment + 10 * params.talent_attraction + (Math.sin(params.rd_subsidy * 0.01) * 3)' },
+        { indicatorId: 'high_tech_output', expression: '15000 + 30 * params.rd_subsidy + 500 * params.patent_protection + 2 * params.edu_investment + 1000 * params.talent_attraction + (Math.cos(params.rd_subsidy * 0.005) * 200)' },
+        { indicatorId: 'rd_intensity', expression: '2.0 + 0.005 * params.rd_subsidy + 0.1 * params.patent_protection + 0.0002 * params.edu_investment + 0.2 * params.talent_attraction + (Math.sin(params.edu_investment * 0.0001) * 0.05)' },
+        { indicatorId: 'talent_inflow', expression: '5 + 0.02 * params.rd_subsidy + 1 * params.patent_protection + 0.003 * params.edu_investment + 5 * params.talent_attraction + (Math.random() * 2)' },
+        { indicatorId: 'tech_innovation_index', expression: '40 + 0.1 * params.rd_subsidy + 3 * params.patent_protection + 0.005 * params.edu_investment + 8 * params.talent_attraction + (Math.sin(params.rd_subsidy * 0.008) * 2)' },
+      ],
+    };
+  }
 
-  private heroProCase() { return { parameters: [
-    { id: 'response_time', name: 'response_time', label: 'Ó¦¼±ÏìÓ¦Ê±¼ä', type: 'slider', min: 0.5, max: 24, step: 0.5, default: 6, unit: 'Ğ¡Ê±' },
-    { id: 'rescue_teams', name: 'rescue_teams', label: '¾ÈÔ®¶ÓÎéÊıÁ¿', type: 'slider', min: 5, max: 100, step: 5, default: 30, unit: 'Ö§' },
-    { id: 'evacuation_radius', name: 'evacuation_radius', label: 'ÊèÉ¢°ë¾¶', type: 'slider', min: 1, max: 20, step: 1, default: 5, unit: '¹«Àï' },
-    { id: 'supply_reserve', name: 'supply_reserve', label: 'Ó¦¼±Îï×Ê´¢±¸', type: 'slider', min: 10, max: 100, step: 5, default: 40, unit: '%' },
-    { id: 'comm_strategy', name: 'comm_strategy', label: 'Î£»ú¹µÍ¨²ßÂÔ', type: 'select', options: [
-      { label: '½öÄÚ²¿Í¨±¨', value: 0 }, { label: '¶¨ÆÚ¼ò±¨', value: 1 }, { label: 'ÊµÊ±¹«¿ª', value: 2 }, { label: '¶àÇşµÀÈ«¸²¸Ç', value: 3 }
-    ], default: 1, unit: '' },
-  ], indicators: [
-    { id: 'casualties', name: 'casualties', label: 'Ô¤¼ÆÉËÍöÈËÊı', unit: 'ÈË', format: 'number', higherIsBetter: false },
-    { id: 'econ_loss', name: 'econ_loss', label: '¾­¼ÃËğÊ§', unit: 'ÒÚÔª', format: 'currency', higherIsBetter: false },
-    { id: 'rescue_efficiency', name: 'rescue_efficiency', label: '¾ÈÔ®Ğ§ÂÊ', unit: '%', format: 'percent', higherIsBetter: true },
-    { id: 'public_trust', name: 'public_trust', label: '¹«ÖÚĞÅÈÎ¶È', unit: '%', format: 'percent', higherIsBetter: true },
-    { id: 'infra_damage', name: 'infra_damage', label: '»ù´¡ÉèÊ©Ëğ»ÙÂÊ', unit: '%', format: 'percent', higherIsBetter: false },
-  ], formulas: [
-    { indicatorId: 'casualties', expression: 'Math.round(500 - 10 * params.rescue_teams - 3 * params.evacuation_radius + 8 * params.response_time - 2 * params.supply_reserve + 20 * params.comm_strategy - 100 + (Math.sin(params.response_time * 0.3) * 30))' },
-    { indicatorId: 'econ_loss', expression: '100 - 1.5 * params.rescue_teams - 0.5 * params.evacuation_radius + 3 * params.response_time - 0.3 * params.supply_reserve + 5 * params.comm_strategy + 20 + (Math.cos(params.response_time * 0.2) * 10)' },
-    { indicatorId: 'rescue_efficiency', expression: '30 + 0.5 * params.rescue_teams + 1.5 * params.evacuation_radius - 1.5 * params.response_time + 0.4 * params.supply_reserve + 5 * params.comm_strategy + (Math.sin(params.rescue_teams * 0.05) * 3)' },
-    { indicatorId: 'public_trust', expression: '40 + 0.2 * params.rescue_teams + 0.5 * params.evacuation_radius - 2 * params.response_time + 0.3 * params.supply_reserve + 12 * params.comm_strategy + (Math.random() * 5)' },
-    { indicatorId: 'infra_damage', expression: '60 - 0.3 * params.rescue_teams - 0.8 * params.evacuation_radius + 2 * params.response_time - 0.2 * params.supply_reserve + 3 * params.comm_strategy - 10 + (Math.sin(params.evacuation_radius * 0.2) * 5)' },
-  ] }; }
+  private heroProCase() {
+    return {
+      parameters: [
+        { id: 'response_time', name: 'response_time', label: 'åº”æ€¥å“åº”æ—¶é—´', type: 'slider', min: 0.5, max: 24, step: 0.5, default: 6, unit: 'å°æ—¶' },
+        { id: 'rescue_teams', name: 'rescue_teams', label: 'æ•‘æ´é˜Ÿä¼æ•°é‡', type: 'slider', min: 5, max: 100, step: 5, default: 30, unit: 'æ”¯' },
+        { id: 'evacuation_radius', name: 'evacuation_radius', label: 'ç–æ•£åŠå¾„', type: 'slider', min: 1, max: 20, step: 1, default: 5, unit: 'å…¬é‡Œ' },
+        { id: 'supply_reserve', name: 'supply_reserve', label: 'åº”æ€¥ç‰©èµ„å‚¨å¤‡', type: 'slider', min: 10, max: 100, step: 5, default: 40, unit: '%' },
+        { id: 'comm_strategy', name: 'comm_strategy', label: 'å±æœºæ²Ÿé€šç­–ç•¥', type: 'select', options: [
+          { label: 'å†…éƒ¨é€šæŠ¥', value: 0 }, { label: 'æœ‰é™å…¬å¼€', value: 1 }, { label: 'å®æ—¶å…¬å¼€', value: 2 }, { label: 'å¤šç»´å…¨å…¬å¼€', value: 3 }
+        ], default: 1, unit: '' },
+      ],
+      indicators: [
+        { id: 'casualties', name: 'casualties', label: 'é¢„è®¡ä¼¤äº¡äººæ•°', unit: 'äºº', format: 'number', higherIsBetter: false },
+        { id: 'econ_loss', name: 'econ_loss', label: 'ç»æµæŸå¤±', unit: 'äº¿å…ƒ', format: 'currency', higherIsBetter: false },
+        { id: 'rescue_efficiency', name: 'rescue_efficiency', label: 'æ•‘æ´æ•ˆç‡', unit: '%', format: 'percent', higherIsBetter: true },
+        { id: 'public_trust', name: 'public_trust', label: 'å…¬ä¼—ä¿¡ä»»åº¦', unit: '%', format: 'percent', higherIsBetter: true },
+        { id: 'infra_damage', name: 'infra_damage', label: 'åŸºç¡€è®¾æ–½æŸå', unit: '%', format: 'percent', higherIsBetter: false },
+      ],
+      formulas: [
+        { indicatorId: 'casualties', expression: 'Math.round(500 - 10 * params.rescue_teams - 3 * params.evacuation_radius + 8 * params.response_time - 2 * params.supply_reserve + 20 * params.comm_strategy - 100 + (Math.sin(params.response_time * 0.3) * 30))' },
+        { indicatorId: 'econ_loss', expression: '100 - 1.5 * params.rescue_teams - 0.5 * params.evacuation_radius + 3 * params.response_time - 0.3 * params.supply_reserve + 5 * params.comm_strategy + 20 + (Math.cos(params.response_time * 0.2) * 10)' },
+        { indicatorId: 'rescue_efficiency', expression: '30 + 0.5 * params.rescue_teams + 1.5 * params.evacuation_radius - 1.5 * params.response_time + 0.4 * params.supply_reserve + 5 * params.comm_strategy + (Math.sin(params.rescue_teams * 0.05) * 3)' },
+        { indicatorId: 'public_trust', expression: '40 + 0.2 * params.rescue_teams + 0.5 * params.evacuation_radius - 2 * params.response_time + 0.3 * params.supply_reserve + 12 * params.comm_strategy + (Math.random() * 5)' },
+        { indicatorId: 'infra_damage', expression: '60 - 0.3 * params.rescue_teams - 0.8 * params.evacuation_radius + 2 * params.response_time - 0.2 * params.supply_reserve + 3 * params.comm_strategy - 10 + (Math.sin(params.evacuation_radius * 0.2) * 5)' },
+      ],
+    };
+  }
 
-  private gisCase() { return { parameters: [
-    { id: 'sensor_density', name: 'sensor_density', label: '´«¸ĞÆ÷ÃÜ¶È', type: 'slider', min: 10, max: 100, step: 5, default: 40, unit: '%' },
-    { id: 'ai_investment', name: 'ai_investment', label: 'AI·ÖÎöÄÜÁ¦Í¶Èë', type: 'slider', min: 10, max: 100, step: 5, default: 40, unit: '%' },
-    { id: 'traffic_optimization', name: 'traffic_optimization', label: '½»Í¨ÓÅ»¯Á¦¶È', type: 'slider', min: 0, max: 100, step: 5, default: 40, unit: '%' },
-    { id: 'smart_grid', name: 'smart_grid', label: 'ÖÇÄÜµçÍø¸²¸ÇÂÊ', type: 'slider', min: 10, max: 100, step: 5, default: 40, unit: '%' },
-    { id: 'data_openness', name: 'data_openness', label: 'Êı¾İ¿ª·Å²ßÂÔ', type: 'select', options: [
-      { label: '·â±Õ', value: 0 }, { label: 'ÓĞÏŞ¿ª·Å', value: 1 }, { label: '¿ª·ÅÕş¸®Êı¾İ', value: 2 }, { label: 'È«Ãæ¿ª·Å+API', value: 3 }
-    ], default: 1, unit: '' },
-  ], indicators: [
-    { id: 'traffic_efficiency', name: 'traffic_efficiency', label: '½»Í¨Í¨ĞĞĞ§ÂÊ', unit: '%', format: 'percent', higherIsBetter: true },
-    { id: 'energy_savings', name: 'energy_savings', label: 'ÄÜÔ´½ÚÔ¼ÂÊ', unit: '%', format: 'percent', higherIsBetter: true },
-    { id: 'env_index', name: 'env_index', label: '³ÇÊĞ»·¾³Ö¸Êı', unit: '', format: 'number', higherIsBetter: true },
-    { id: 'gov_efficiency', name: 'gov_efficiency', label: 'ĞĞÕş·şÎñĞ§ÂÊ', unit: '%', format: 'percent', higherIsBetter: true },
-    { id: 'digital_life', name: 'digital_life', label: '¾ÓÃñÊı×Ö»¯Éú»îÖ¸Êı', unit: '', format: 'number', higherIsBetter: true },
-  ], formulas: [
-    { indicatorId: 'traffic_efficiency', expression: '40 + 0.3 * params.sensor_density + 0.2 * params.ai_investment + 0.4 * params.traffic_optimization + 2 * params.data_openness + (Math.sin(params.traffic_optimization * 0.03) * 3)' },
-    { indicatorId: 'energy_savings', expression: '10 + 0.15 * params.sensor_density + 0.2 * params.ai_investment + 0.1 * params.traffic_optimization + 0.3 * params.smart_grid + 1 * params.data_openness + (Math.cos(params.smart_grid * 0.02) * 2)' },
-    { indicatorId: 'env_index', expression: '50 + 0.2 * params.sensor_density + 0.15 * params.ai_investment + 0.1 * params.traffic_optimization + 0.15 * params.smart_grid + 3 * params.data_openness + (Math.sin(params.sensor_density * 0.02) * 3)' },
-    { indicatorId: 'gov_efficiency', expression: '40 + 0.2 * params.sensor_density + 0.3 * params.ai_investment + 0.1 * params.traffic_optimization + 0.1 * params.smart_grid + 5 * params.data_openness + (Math.random() * 5)' },
-    { indicatorId: 'digital_life', expression: '30 + 0.25 * params.sensor_density + 0.3 * params.ai_investment + 0.15 * params.traffic_optimization + 0.2 * params.smart_grid + 8 * params.data_openness + (Math.sin(params.ai_investment * 0.02) * 3)' },
-  ] }; }
+  private gisCase() {
+    return {
+      parameters: [
+        { id: 'sensor_density', name: 'sensor_density', label: 'ä¼ æ„Ÿå™¨è¦†ç›–ç‡', type: 'slider', min: 10, max: 100, step: 5, default: 40, unit: '%' },
+        { id: 'ai_investment', name: 'ai_investment', label: 'AIåˆ†ææŠ€æœ¯æŠ•å…¥', type: 'slider', min: 10, max: 100, step: 5, default: 40, unit: '%' },
+        { id: 'traffic_optimization', name: 'traffic_optimization', label: 'äº¤é€šä¼˜åŒ–åŠ›åº¦', type: 'slider', min: 0, max: 100, step: 5, default: 40, unit: '%' },
+        { id: 'smart_grid', name: 'smart_grid', label: 'æ™ºèƒ½ç”µç½‘è¦†ç›–ç‡', type: 'slider', min: 10, max: 100, step: 5, default: 40, unit: '%' },
+        { id: 'data_openness', name: 'data_openness', label: 'æ•°æ®å¼€æ”¾ç¨‹åº¦', type: 'select', options: [
+          { label: 'å°é—­', value: 0 }, { label: 'æœ‰é™å¼€æ”¾', value: 1 }, { label: 'æ”¿åºœå†…éƒ¨å…±äº«', value: 2 }, { label: 'å…¨é¢å¼€æ”¾+API', value: 3 }
+        ], default: 1, unit: '' },
+      ],
+      indicators: [
+        { id: 'traffic_efficiency', name: 'traffic_efficiency', label: 'äº¤é€šé€šè¡Œæ•ˆç‡', unit: '%', format: 'percent', higherIsBetter: true },
+        { id: 'energy_savings', name: 'energy_savings', label: 'èƒ½æºèŠ‚çº¦ç‡', unit: '%', format: 'percent', higherIsBetter: true },
+        { id: 'env_index', name: 'env_index', label: 'åŸå¸‚ç¯å¢ƒæŒ‡æ•°', unit: '', format: 'number', higherIsBetter: true },
+        { id: 'gov_efficiency', name: 'gov_efficiency', label: 'æ”¿åºœæœåŠ¡æ•ˆç‡', unit: '%', format: 'percent', higherIsBetter: true },
+        { id: 'digital_life', name: 'digital_life', label: 'å±…æ°‘æ•°å­—åŒ–ç”Ÿæ´»æŒ‡æ•°', unit: '', format: 'number', higherIsBetter: true },
+      ],
+      formulas: [
+        { indicatorId: 'traffic_efficiency', expression: '40 + 0.3 * params.sensor_density + 0.2 * params.ai_investment + 0.4 * params.traffic_optimization + 2 * params.data_openness + (Math.sin(params.traffic_optimization * 0.03) * 3)' },
+        { indicatorId: 'energy_savings', expression: '10 + 0.15 * params.sensor_density + 0.2 * params.ai_investment + 0.1 * params.traffic_optimization + 0.3 * params.smart_grid + 1 * params.data_openness + (Math.cos(params.smart_grid * 0.02) * 2)' },
+        { indicatorId: 'env_index', expression: '50 + 0.2 * params.sensor_density + 0.15 * params.ai_investment + 0.1 * params.traffic_optimization + 0.15 * params.smart_grid + 3 * params.data_openness + (Math.sin(params.sensor_density * 0.02) * 3)' },
+        { indicatorId: 'gov_efficiency', expression: '40 + 0.2 * params.sensor_density + 0.3 * params.ai_investment + 0.1 * params.traffic_optimization + 0.1 * params.smart_grid + 5 * params.data_openness + (Math.random() * 5)' },
+        { indicatorId: 'digital_life', expression: '30 + 0.25 * params.sensor_density + 0.3 * params.ai_investment + 0.15 * params.traffic_optimization + 0.2 * params.smart_grid + 8 * params.data_openness + (Math.sin(params.ai_investment * 0.02) * 3)' },
+      ],
+    };
+  }
 }
