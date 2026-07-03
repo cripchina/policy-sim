@@ -6,6 +6,9 @@ import { CasesModule } from './cases/cases.module';
 import { SimulationModule } from './simulation/simulation.module';
 import { ReportsModule } from './reports/reports.module';
 import { HealthModule } from './health/health.module';
+import { SeedService } from './seed.service';
+import { User } from './users/user.entity';
+import { PolicyCase } from './cases/case.entity';
 
 @Module({
   imports: [
@@ -16,6 +19,7 @@ import { HealthModule } from './health/health.module';
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
       synchronize: true,
     }),
+    TypeOrmModule.forFeature([User, PolicyCase]),
     AuthModule,
     UsersModule,
     CasesModule,
@@ -23,5 +27,6 @@ import { HealthModule } from './health/health.module';
     ReportsModule,
     HealthModule,
   ],
+  providers: [SeedService],
 })
 export class AppModule {}

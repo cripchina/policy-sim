@@ -26,10 +26,6 @@ COPY --from=backend-builder /app/backend/dist ./backend/dist
 COPY --from=backend-builder /app/backend/node_modules ./backend/node_modules
 COPY --from=backend-builder /app/backend/package.json ./backend/package.json
 
-# Copy seed script
-COPY backend/src/seed.ts ./backend/src/seed.ts
-COPY backend/tsconfig.json ./backend/tsconfig.json
-
 # Create data directory
 RUN mkdir -p /app/backend/data
 
