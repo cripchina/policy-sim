@@ -1,4 +1,4 @@
-import { NestFactory } from '@nestjs/core';
+﻿import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { NestExpressApplication } from '@nestjs/platform-express';
@@ -19,7 +19,7 @@ async function bootstrap() {
 
   // Swagger docs
   const config = new DocumentBuilder()
-    .setTitle('鍏叡鏀跨瓥浠跨湡骞冲彴 API')
+    .setTitle('公共政策仿真平台 API')
     .setDescription('Policy Simulation Platform API')
     .setVersion('1.0')
     .addBearerAuth()
