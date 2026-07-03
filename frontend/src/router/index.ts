@@ -32,6 +32,30 @@ const routes = [
     component: () => import('../views/Reports.vue'),
     meta: { requiresAuth: true },
   },
+  {
+    path: '/classes',
+    name: 'Classes',
+    component: () => import('../views/Classes.vue'),
+    meta: { requiresAuth: true },
+  },
+  {
+    path: '/classes/:id',
+    name: 'ClassDetail',
+    component: () => import('../views/ClassDetail.vue'),
+    meta: { requiresAuth: true },
+  },
+  {
+    path: '/experiments',
+    name: 'Experiments',
+    component: () => import('../views/Experiments.vue'),
+    meta: { requiresAuth: true },
+  },
+  {
+    path: '/experiments/:id',
+    name: 'ExperimentDetail',
+    component: () => import('../views/ExperimentDetail.vue'),
+    meta: { requiresAuth: true },
+  },
 ]
 
 const router = createRouter({

@@ -14,6 +14,14 @@
       <el-icon><Reading /></el-icon>
       <span>案例中心</span>
     </el-menu-item>
+    <el-menu-item index="/classes" v-if="auth.isTeacher">
+      <el-icon><School /></el-icon>
+      <span>班级管理</span>
+    </el-menu-item>
+    <el-menu-item index="/experiments" v-if="auth.isTeacher">
+      <el-icon><Timer /></el-icon>
+      <span>实验管理</span>
+    </el-menu-item>
     <el-menu-item index="/reports">
       <el-icon><Document /></el-icon>
       <span>实验报告</span>

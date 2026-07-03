@@ -1,13 +1,15 @@
 import api from './index'
 
+export interface User {
+  id: number
+  username: string
+  displayName: string
+  role: string
+}
+
 export interface LoginResponse {
   access_token: string
-  user: {
-    id: number
-    username: string
-    displayName: string
-    role: string
-  }
+  user: User
 }
 
 export async function login(username: string, password: string): Promise<LoginResponse> {
