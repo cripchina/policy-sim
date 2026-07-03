@@ -25,7 +25,7 @@
         <el-col :xs="12" :sm="6" v-for="stat in statCards" :key="stat.label">
           <el-card shadow="never" class="stat-card" :style="{ borderLeftColor: stat.color }">
             <div class="stat-content">
-              <el-icon class="stat-icon" :size="28" :color="stat.color">{{ stat.icon }}</el-icon>
+              <el-icon class="stat-icon" :size="28" :color="stat.color"><component :is="stat.icon" /></el-icon>
               <div class="stat-info">
                 <h3>{{ stat.value }}</h3>
                 <p>{{ stat.label }}</p>
