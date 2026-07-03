@@ -62,11 +62,6 @@ async function bootstrap() {
     console.log('API-only mode. Build frontend with: cd frontend && npm run build');
   }
 
-  // Health check endpoint (no auth required, for Railway/Render health checks)
-  app.use('/api/health', (_req: Request, res: Response) => {
-    res.json({ status: 'ok', timestamp: new Date().toISOString() });
-  });
-
   await app.listen(port, '0.0.0.0');
   console.log(`Server running on http://0.0.0.0:${port}`);
 }
