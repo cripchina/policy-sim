@@ -1,11 +1,11 @@
-﻿import { Controller, Get } from '@nestjs/common';
+import { Controller, Get } from '@nestjs/common';
 import { ApiTags, ApiOperation } from '@nestjs/swagger';
 
-@ApiTags('健康检查')
+@ApiTags('鍋ュ悍妫€鏌?)
 @Controller('health')
 export class HealthController {
   @Get()
-  @ApiOperation({ summary: '健康检查（无需认证）' })
+  @ApiOperation({ summary: '鍋ュ悍妫€鏌ワ紙鏃犻渶璁よ瘉锛? })
   check() {
     return {
       status: 'ok',
