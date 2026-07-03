@@ -6,6 +6,11 @@
     :ellipsis="false"
     router
   >
+    <div class="brand">
+      <span class="brand-icon">&#9881;</span>
+      <span class="brand-text">政策仿真平台</span>
+    </div>
+
     <el-menu-item index="/">
       <el-icon><HomeFilled /></el-icon>
       <span>首页</span>
@@ -71,10 +76,40 @@ async function handleLogout() {
 <style scoped>
 .nav-bar {
   padding: 0 24px;
-  border-bottom: 1px solid #e4e7ed;
-  background: #fff;
+  border-bottom: 1px solid var(--border-color, #e4e7ed);
+  background: var(--card-bg, #fff);
+  display: flex;
+  align-items: center;
+}
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 20px 0 4px;
+  margin-right: 8px;
+  border-right: 1px solid var(--border-color, #e4e7ed);
+  user-select: none;
+}
+.brand-icon {
+  font-size: 22px;
+  color: var(--primary, #1a365d);
+}
+.brand-text {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--primary, #1a365d);
+  white-space: nowrap;
 }
 .flex-grow {
   flex-grow: 1;
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+  .brand-text { display: none; }
+  .brand { padding-right: 8px; }
+  :deep(.el-menu-item span) { display: none; }
+  :deep(.el-menu-item .el-icon) { margin-right: 0; }
+  :deep(.el-sub-menu__title span) { display: none; }
 }
 </style>

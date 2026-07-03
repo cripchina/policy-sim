@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
+import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { CasesModule } from './cases/cases.module';
@@ -12,15 +12,31 @@ import { SeedService } from './seed.service';
 import { User } from './users/user.entity';
 import { PolicyCase } from './cases/case.entity';
 
-@Module({
-  imports: [
-    TypeOrmModule.forRoot({
-      type: 'sqljs',
-      location: './data/policysim.db',
-      autoSave: true,
+function getDatabaseConfig(): TypeOrmModuleOptions {
+  const databaseUrl = process.env.DATABASE_URL;
+  if (databaseUrl) {
+    // PostgreSQL in production (Railway)
+    return {
+      type: 'postgres',
+      url: databaseUrl,
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
       synchronize: true,
-    }),
+      ssl: { rejectUnauthorized: false },
+    };
+  }
+  // SQLite for local development
+  return {
+    type: 'sqljs',
+    location: './data/policysim.db',
+    autoSave: true,
+    entities: [__dirname + '/**/*.entity{.ts,.js}'],
+    synchronize: true,
+  };
+}
+
+@Module({
+  imports: [
+    TypeOrmModule.forRoot(getDatabaseConfig()),
     TypeOrmModule.forFeature([User, PolicyCase]),
     AuthModule,
     UsersModule,

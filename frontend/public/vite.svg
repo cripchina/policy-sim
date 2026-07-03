@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <rect x="10" y="45" width="16" height="40" rx="3" fill="#1a365d"/>
+  <rect x="30" y="30" width="16" height="55" rx="3" fill="#2a4a7f"/>
+  <rect x="50" y="20" width="16" height="65" rx="3" fill="#3b5e9c"/>
+  <rect x="70" y="35" width="16" height="50" rx="3" fill="#4a72b0"/>
+  <text x="50" y="92" text-anchor="middle" font-size="10" fill="#999" font-family="sans-serif">POLICY</text>
+</svg>
