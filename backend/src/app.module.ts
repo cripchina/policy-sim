@@ -8,6 +8,7 @@ import { ReportsModule } from './reports/reports.module';
 import { HealthModule } from './health/health.module';
 import { ClassesModule } from './classes/classes.module';
 import { ExperimentsModule } from './experiments/experiments.module';
+import { StatsModule } from './stats/stats.module';
 import { SeedService } from './seed.service';
 import { User } from './users/user.entity';
 import { PolicyCase } from './cases/case.entity';
@@ -46,6 +47,7 @@ function getDatabaseConfig(): TypeOrmModuleOptions {
     HealthModule,
     ClassesModule,
     ExperimentsModule,
+    StatsModule,
   ],
   providers: [SeedService],
 })

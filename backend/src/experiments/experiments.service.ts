@@ -1,8 +1,9 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, In } from 'typeorm';
 import { Experiment, ExperimentStatus } from './experiment.entity';
 import { SimulationRun } from '../simulation/simulation-run.entity';
+import { ClassStudent } from '../classes/class-student.entity';
 
 @Injectable()
 export class ExperimentsService {
@@ -11,6 +12,8 @@ export class ExperimentsService {
     private experimentsRepository: Repository<Experiment>,
     @InjectRepository(SimulationRun)
     private simulationRunRepository: Repository<SimulationRun>,
+    @InjectRepository(ClassStudent)
+    private classStudentRepository: Repository<ClassStudent>,
   ) {}
 
   async findAll(teacherId?: number): Promise<Experiment[]> {
@@ -50,6 +53,22 @@ export class ExperimentsService {
    * Get simulation results for all students in this experiment.
    * Returns the latest simulation run per student for the experiment's case.
    */
+  /**
+   * Find experiments assigned to classes a student belongs to.
+   */
+  async findByStudent(studentId: number): Promise<Experiment[]> {
+    const enrollments = await this.classStudentRepository.find({
+      where: { studentId },
+    });
+    if (enrollments.length === 0) return [];
+    const classIds = enrollments.map((e) => e.classId);
+    return this.experimentsRepository.find({
+      where: { classId: In(classIds) },
+      order: { createdAt: 'DESC' },
+      relations: ['class', 'policyCase', 'teacher'],
+    });
+  }
+
   async getResults(experimentId: number): Promise<any[]> {
     const exp = await this.findById(experimentId);
 

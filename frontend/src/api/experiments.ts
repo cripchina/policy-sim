@@ -34,6 +34,12 @@ export async function getExperiments(): Promise<Experiment[]> {
   return res.data
 }
 
+/** Get experiments assigned to the current student */
+export async function getAssignedExperiments(): Promise<Experiment[]> {
+  const res = await api.get('/experiments/assigned')
+  return res.data
+}
+
 /** Get experiment by ID */
 export async function getExperiment(id: number): Promise<Experiment> {
   const res = await api.get(`/experiments/${id}`)

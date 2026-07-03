@@ -29,6 +29,12 @@ export class ExperimentsController {
     return this.experimentsService.findAll(req.user.id);
   }
 
+  @Get('assigned')
+  @ApiOperation({ summary: '获取分配给学生的实验（学生端）' })
+  async getAssigned(@Request() req): Promise<Experiment[]> {
+    return this.experimentsService.findByStudent(req.user.id);
+  }
+
   @Get(':id')
   @ApiOperation({ summary: '获取实验详情' })
   async findOne(@Param('id') id: string): Promise<Experiment> {
