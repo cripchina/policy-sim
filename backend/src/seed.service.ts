@@ -1,4 +1,4 @@
-import { Injectable, OnModuleInit } from '@nestjs/common';
+﻿import { Injectable, OnModuleInit } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcryptjs';
@@ -17,118 +17,68 @@ export class SeedService implements OnModuleInit {
   async onModuleInit() {
     const userCount = await this.userRepo.count();
     const caseCount = await this.caseRepo.count();
-
-    // Check if we already have valid seed data
-    const caseCheck = await this.caseRepo.findOne({ where: { title: '税收政策对宏观经济的影响' } });
+    const caseCheck = await this.caseRepo.findOne({ where: { title: "\u7a0e\u6536\u653f\u7b56\u5bf9\u5b8f\u89c2\u7ecf\u6d4e\u7684\u5f71\u54cd" } });
     if (caseCheck) {
-      console.log('Database already has valid seed data, skipping seed');
+      console.log("Database already has valid seed data, skipping seed");
       return;
     }
-
-    // If cases exist but with garbled titles, re-seed them
     if (caseCount > 0) {
-      console.log('Detected garbled/unexpected case data, re-seeding cases...');
+      console.log("Detected garbled/unexpected case data, re-seeding cases...");
       await this.caseRepo.clear();
     }
-
     if (userCount > 0) {
-      console.log('Users exist, will seed cases only');
+      console.log("Users exist, will seed cases only");
       const cases = this.buildCases();
       await this.caseRepo.save(cases);
-      console.log('Cases seeded successfully!');
+      console.log("Cases seeded successfully!");
       return;
     }
-
-    console.log('Seeding database...');
-
+    console.log("Seeding database...");
     const hashedPwd = await bcrypt.hash('123456', 10);
 
     await this.userRepo.save([
-      { username: 'admin', password: hashedPwd, displayName: '系统管理员', role: UserRole.ADMIN },
-      { username: 'teacher1', password: hashedPwd, displayName: '张老师', role: UserRole.TEACHER },
-      { username: 'teacher2', password: hashedPwd, displayName: '王老师', role: UserRole.TEACHER },
-      { username: 'student1', password: hashedPwd, displayName: '李同学', role: UserRole.STUDENT },
-      { username: 'student2', password: hashedPwd, displayName: '赵同学', role: UserRole.STUDENT },
-      { username: 'student3', password: hashedPwd, displayName: '陈同学', role: UserRole.STUDENT },
+      { username: "admin", password: hashedPwd, displayName: "\u7cfb\u7edf\u7ba1\u7406\u5458", role: UserRole.ADMIN },
+      { username: "teacher1", password: hashedPwd, displayName: "\u5f20\u8001\u5e08", role: UserRole.TEACHER },
+      { username: "teacher2", password: hashedPwd, displayName: "\u738b\u8001\u5e08", role: UserRole.TEACHER },
+      { username: "student1", password: hashedPwd, displayName: "\u674e\u540c\u5b66", role: UserRole.STUDENT },
+      { username: "student2", password: hashedPwd, displayName: "\u8d75\u540c\u5b66", role: UserRole.STUDENT },
+      { username: "student3", password: hashedPwd, displayName: "\u9648\u540c\u5b66", role: UserRole.STUDENT },
     ]);
 
     const cases = this.buildCases();
     await this.caseRepo.save(cases);
-
-    console.log('Seed completed successfully!');
+    console.log("Seed completed successfully!");
   }
 
   private buildCases(): Partial<PolicyCase>[] {
     return [
-      {
-        title: '税收政策对宏观经济的影响',
-        description: '模拟增值税率、企业所得税率等税收工具，观察对GDP、企业投资、就业等宏观经济指标的影响。',
-        category: '财政税收',
-        background: '## 政策背景\n\n税收政策是国家宏观调控的重要工具。当前我国经济面临下行压力，如何通过税收政策的调整"减税降费、优化结构"成为当前面临的关键问题。\n\n## 实验目标\n\n通过调整不同的税收工具参数，观察各项宏观经济指标的变化趋势，理解税收政策对经济运行的影响机制。',
-        config: JSON.stringify(this.taxPolicyCase()),
-      },
-      {
-        title: '环境保护与经济发展的平衡',
-        description: '探索排放标准、污染税、绿色补贴等环境政策工具，如何在改善环境质量的同时促进企业转型和就业。',
-        category: '环境政策',
-        background: '## 政策背景\n\n经济发展与环境保护之间的平衡是可持续发展的核心挑战。如何在保持经济增长的同时改善环境质量，是各国政府面临的重要政策问题。',
-        config: JSON.stringify(this.environmentCase()),
-      },
-      {
-        title: '社会保障支出与社会稳定',
-        description: '调整社会保障支出、最低工资、失业救济金和医疗保障覆盖率，评估对贫困率、社会稳定和财政可持续性的综合影响。',
-        category: '社会保障',
-        background: '## 政策背景\n\n完善的社会保障体系是人民生活的重要保障。在人口老龄化加速的背景下，如何平衡保障水平与财政可持续性成为政策制定者必须面对的关键挑战。',
-        config: JSON.stringify(this.welfareCase()),
-      },
-      {
-        title: '房地产调控与市场稳定',
-        description: '运用房产税、土地供应、贷款利率和限购政策等工具，实现"住有所居"目标，促进房地产市场健康发展。',
-        category: '住房政策',
-        background: '## 政策背景\n\n房地产市场的平稳健康发展关系经济全局和人民群众的切身利益。如何通过政策工具组合实现"房住不炒"的目标，是本实验探讨的重点。',
-        config: JSON.stringify(this.housingCase()),
-      },
-      {
-        title: '科技创新驱动产业升级',
-        description: '通过研发补贴、知识产权保护、教育投资和人才吸引政策，推动科技创新和产业结构升级。',
-        category: '科技政策',
-        background: '## 政策背景\n\n科技创新是引领发展的第一动力。在当前全球经济竞争加剧的背景下，如何通过政策组合拳提升国家创新能力，推动产业向价值链高端攀升，是政策制定者关注的核心议题。',
-        config: JSON.stringify(this.innovationCase()),
-      },
-      {
-        title: 'HeroPro 应急灾害响应',
-        description: '模拟自然灾害应急响应中的资源调度、人员疏散和危机沟通策略，最大限度减少人员伤亡和经济损失。',
-        category: '应急管理',
-        background: '## 政策背景\n\n突发性自然灾害（地震、洪涝、台风）的应急响应效率直接关系人民群众生命财产安全。如何科学配置有限的应急资源，是本案例探讨的核心问题。',
-        config: JSON.stringify(this.heroProCase()),
-      },
-      {
-        title: 'GIS 智慧城市管理',
-        description: '部署物联网传感器、人工智能分析和数据开放平台，优化城市交通、能源消耗和公共服务系统。',
-        category: '智慧城市',
-        background: '## 政策背景\n\n智慧城市利用数字技术提升城市治理能力和居民生活质量。本案例探讨如何通过不同技术方案的组合，实现城市运行效率的最大化。',
-        config: JSON.stringify(this.gisCase()),
-      },
+      { title: "\u7a0e\u6536\u653f\u7b56\u5bf9\u5b8f\u89c2\u7ecf\u6d4e\u7684\u5f71\u54cd", description: "\u6a21\u62df\u589e\u503c\u7a0e\u7387\u3001\u4f01\u4e1a\u6240\u5f97\u7a0e\u7387\u7b49\u7a0e\u6536\u5de5\u5177\uff0c\u89c2\u5bdf\u5bf9GDP\u3001\u4f01\u4e1a\u6295\u8d44\u3001\u5c31\u4e1a\u7b49\u5b8f\u89c2\u7ecf\u6d4e\u6307\u6807\u7684\u5f71\u54cd\u3002", category: "\u8d22\u653f\u7a0e\u6536", background: "## \u653f\u7b56\u80cc\u666f\n\n\u7a0e\u6536\u653f\u7b56\u662f\u56fd\u5bb6\u5b8f\u89c2\u8c03\u63a7\u7684\u91cd\u8981\u5de5\u5177\u3002\u5f53\u524d\u6211\u56fd\u7ecf\u6d4e\u9762\u4e34\u4e0b\u884c\u538b\u529b\uff0c\u5982\u4f55\u901a\u8fc7\u7a0e\u6536\u653f\u7b56\u7684\u8c03\u6574\u5b9e\u73b0\u201c\u51cf\u7a0e\u964d\u8d39\u3001\u4f18\u5316\u7ed3\u6784\u201d\u6210\u4e3a\u5f53\u524d\u9762\u4e34\u7684\u5173\u952e\u95ee\u9898\u3002\n\n## \u5b9e\u9a8c\u76ee\u6807\n\n\u901a\u8fc7\u8c03\u6574\u4e0d\u540c\u7684\u7a0e\u6536\u5de5\u5177\u53c2\u6570\uff0c\u89c2\u5bdf\u5404\u9879\u5b8f\u89c2\u7ecf\u6d4e\u6307\u6807\u7684\u53d8\u5316\u8d8b\u52bf\uff0c\u7406\u89e3\u7a0e\u6536\u653f\u7b56\u5bf9\u7ecf\u6d4e\u8fd0\u884c\u7684\u5f71\u54cd\u673a\u5236\u3002", config: JSON.stringify(this.taxPolicyCase()), },
+      { title: "\u73af\u5883\u4fdd\u62a4\u4e0e\u7ecf\u6d4e\u53d1\u5c55\u7684\u5e73\u8861", description: "\u63a2\u7d22\u6392\u653e\u6807\u51c6\u3001\u6c61\u67d3\u7a0e\u3001\u7eff\u8272\u8865\u8d34\u7b49\u73af\u5883\u653f\u7b56\u5de5\u5177\uff0c\u5982\u4f55\u5728\u6539\u5584\u73af\u5883\u8d28\u91cf\u7684\u540c\u65f6\u4fc3\u8fdb\u4f01\u4e1a\u8f6c\u578b\u548c\u5c31\u4e1a\u3002", category: "\u73af\u5883\u653f\u7b56", background: "## \u653f\u7b56\u80cc\u666f\n\n\u7ecf\u6d4e\u53d1\u5c55\u4e0e\u73af\u5883\u4fdd\u62a4\u4e4b\u95f4\u7684\u5e73\u8861\u662f\u53ef\u6301\u7eed\u53d1\u5c55\u7684\u6838\u5fc3\u6311\u6218\u3002\u5982\u4f55\u5728\u4fdd\u6301\u7ecf\u6d4e\u589e\u957f\u7684\u540c\u65f6\u6539\u5584\u73af\u5883\u8d28\u91cf\uff0c\u662f\u5404\u56fd\u653f\u5e9c\u9762\u4e34\u7684\u91cd\u8981\u653f\u7b56\u95ee\u9898\u3002", config: JSON.stringify(this.environmentCase()), },
+      { title: "\u793e\u4f1a\u4fdd\u969c\u652f\u51fa\u4e0e\u793e\u4f1a\u7a33\u5b9a", description: "\u8c03\u6574\u793e\u4f1a\u4fdd\u969c\u652f\u51fa\u3001\u6700\u4f4e\u5de5\u8d44\u3001\u5931\u4e1a\u6551\u6d4e\u91d1\u548c\u533b\u7597\u4fdd\u969c\u8986\u76d6\u7387\uff0c\u8bc4\u4f30\u5bf9\u8d2b\u56f0\u7387\u3001\u793e\u4f1a\u7a33\u5b9a\u548c\u8d22\u653f\u53ef\u6301\u7eed\u6027\u7684\u7efc\u5408\u5f71\u54cd\u3002", category: "\u793e\u4f1a\u4fdd\u969c", background: "## \u653f\u7b56\u80cc\u666f\n\n\u5b8c\u5584\u7684\u793e\u4f1a\u4fdd\u969c\u4f53\u7cfb\u662f\u4eba\u6c11\u751f\u6d3b\u7684\u91cd\u8981\u4fdd\u969c\u3002\u5728\u4eba\u53e3\u8001\u9f84\u5316\u52a0\u901f\u7684\u80cc\u666f\u4e0b\uff0c\u5982\u4f55\u5e73\u8861\u4fdd\u969c\u6c34\u5e73\u4e0e\u8d22\u653f\u53ef\u6301\u7eed\u6027\u6210\u4e3a\u653f\u7b56\u5236\u5b9a\u8005\u5fc5\u987b\u9762\u5bf9\u7684\u5173\u952e\u6311\u6218\u3002", config: JSON.stringify(this.welfareCase()), },
+      { title: "\u623f\u5730\u4ea7\u8c03\u63a7\u4e0e\u5e02\u573a\u7a33\u5b9a", description: "\u8fd0\u7528\u623f\u4ea7\u7a0e\u3001\u571f\u5730\u4f9b\u5e94\u3001\u8d37\u6b3e\u5229\u7387\u548c\u9650\u8d2d\u653f\u7b56\u7b49\u5de5\u5177\uff0c\u5b9e\u73b0\u201c\u4f4f\u6709\u6240\u5c45\u201d\u76ee\u6807\uff0c\u4fc3\u8fdb\u623f\u5730\u4ea7\u5e02\u573a\u5065\u5eb7\u53d1\u5c55\u3002", category: "\u4f4f\u623f\u653f\u7b56", background: "## \u653f\u7b56\u80cc\u666f\n\n\u623f\u5730\u4ea7\u5e02\u573a\u7684\u5e73\u7a33\u5065\u5eb7\u53d1\u5c55\u5173\u7cfb\u7ecf\u6d4e\u5168\u5c40\u548c\u4eba\u6c11\u7fa4\u4f17\u7684\u5207\u8eab\u5229\u76ca\u3002\u5982\u4f55\u901a\u8fc7\u653f\u7b56\u5de5\u5177\u7ec4\u5408\u5b9e\u73b0\u201c\u623f\u4f4f\u4e0d\u7092\u201d\u7684\u76ee\u6807\uff0c\u662f\u672c\u5b9e\u9a8c\u63a2\u8ba8\u7684\u91cd\u70b9\u3002", config: JSON.stringify(this.housingCase()), },
+      { title: "\u79d1\u6280\u521b\u65b0\u9a71\u52a8\u4ea7\u4e1a\u5347\u7ea7", description: "\u901a\u8fc7\u7814\u53d1\u8865\u8d34\u3001\u77e5\u8bc6\u4ea7\u6743\u4fdd\u62a4\u3001\u6559\u80b2\u6295\u8d44\u548c\u4eba\u624d\u5438\u5f15\u653f\u7b56\uff0c\u63a8\u52a8\u79d1\u6280\u521b\u65b0\u548c\u4ea7\u4e1a\u7ed3\u6784\u5347\u7ea7\u3002", category: "\u79d1\u6280\u653f\u7b56", background: "## \u653f\u7b56\u80cc\u666f\n\n\u79d1\u6280\u521b\u65b0\u662f\u5f15\u9886\u53d1\u5c55\u7684\u7b2c\u4e00\u52a8\u529b\u3002\u5728\u5f53\u524d\u5168\u7403\u7ecf\u6d4e\u7ade\u4e89\u52a0\u5267\u7684\u80cc\u666f\u4e0b\uff0c\u5982\u4f55\u901a\u8fc7\u653f\u7b56\u7ec4\u5408\u62f3\u63d0\u5347\u56fd\u5bb6\u521b\u65b0\u80fd\u529b\uff0c\u63a8\u52a8\u4ea7\u4e1a\u5411\u4ef7\u503c\u94fe\u9ad8\u7aef\u6500\u5347\uff0c\u662f\u653f\u7b56\u5236\u5b9a\u8005\u5173\u6ce8\u7684\u6838\u5fc3\u8bae\u9898\u3002", config: JSON.stringify(this.innovationCase()), },
+      { title: "HeroPro \u5e94\u6025\u707e\u5bb3\u54cd\u5e94", description: "\u6a21\u62df\u81ea\u7136\u707e\u5bb3\u5e94\u6025\u54cd\u5e94\u4e2d\u7684\u8d44\u6e90\u8c03\u5ea6\u3001\u4eba\u5458\u758f\u6563\u548c\u5371\u673a\u6c9f\u901a\u7b56\u7565\uff0c\u6700\u5927\u9650\u5ea6\u51cf\u5c11\u4eba\u5458\u4f24\u4ea1\u548c\u7ecf\u6d4e\u635f\u5931\u3002", category: "\u5e94\u6025\u7ba1\u7406", background: "## \u653f\u7b56\u80cc\u666f\n\n\u7a81\u53d1\u6027\u81ea\u7136\u707e\u5bb3\uff08\u5730\u9707\u3001\u6d2a\u6d9d\u3001\u53f0\u98ce\uff09\u7684\u5e94\u6025\u54cd\u5e94\u6548\u7387\u76f4\u63a5\u5173\u7cfb\u4eba\u6c11\u7fa4\u4f17\u751f\u547d\u8d22\u4ea7\u5b89\u5168\u3002\u5982\u4f55\u79d1\u5b66\u914d\u7f6e\u6709\u9650\u7684\u5e94\u6025\u8d44\u6e90\uff0c\u662f\u672c\u6848\u4f8b\u63a2\u8ba8\u7684\u6838\u5fc3\u95ee\u9898\u3002", config: JSON.stringify(this.heroProCase()), },
+      { title: "GIS \u667a\u6167\u57ce\u5e02\u7ba1\u7406", description: "\u90e8\u7f72\u7269\u8054\u7f51\u4f20\u611f\u5668\u3001\u4eba\u5de5\u667a\u80fd\u5206\u6790\u548c\u6570\u636e\u5f00\u653e\u5e73\u53f0\uff0c\u4f18\u5316\u57ce\u5e02\u4ea4\u901a\u3001\u80fd\u6e90\u6d88\u8017\u548c\u516c\u5171\u670d\u52a1\u7cfb\u7edf\u3002", category: "\u667a\u6167\u57ce\u5e02", background: "## \u653f\u7b56\u80cc\u666f\n\n\u667a\u6167\u57ce\u5e02\u5229\u7528\u6570\u5b57\u6280\u672f\u63d0\u5347\u57ce\u5e02\u6cbb\u7406\u80fd\u529b\u548c\u5c45\u6c11\u751f\u6d3b\u8d28\u91cf\u3002\u672c\u6848\u4f8b\u63a2\u8ba8\u5982\u4f55\u901a\u8fc7\u4e0d\u540c\u6280\u672f\u65b9\u6848\u7684\u7ec4\u5408\uff0c\u5b9e\u73b0\u57ce\u5e02\u8fd0\u884c\u6548\u7387\u7684\u6700\u5927\u5316\u3002", config: JSON.stringify(this.gisCase()), },
     ];
   }
 
   private taxPolicyCase() {
     return {
       parameters: [
-        { id: 'vat_rate', name: 'vat_rate', label: '增值税率', type: 'slider', min: 5, max: 25, step: 0.5, default: 13, unit: '%' },
-        { id: 'corp_tax_rate', name: 'corp_tax_rate', label: '企业所得税率', type: 'slider', min: 10, max: 35, step: 1, default: 25, unit: '%' },
-        { id: 'small_tax_break', name: 'small_tax_break', label: '小微企业优惠幅度', type: 'slider', min: 0, max: 100, step: 5, default: 50, unit: '%' },
-        { id: 'tax_zone', name: 'tax_zone', label: '税收优惠区域', type: 'select', options: [
-          { label: '无优惠区', value: 0 }, { label: '普通优惠区', value: 1 }, { label: '重点优惠区', value: 2 }, { label: '自贸试验区', value: 3 }
+        { id: 'vat_rate', name: 'vat_rate', label: '\u589e\u503c\u7a0e\u7387', type: 'slider', min: 5, max: 25, step: 0.5, default: 13, unit: '%' },
+        { id: 'corp_tax_rate', name: 'corp_tax_rate', label: '\u4f01\u4e1a\u6240\u5f97\u7a0e\u7387', type: 'slider', min: 10, max: 35, step: 1, default: 25, unit: '%' },
+        { id: 'small_tax_break', name: 'small_tax_break', label: '\u5c0f\u5fae\u4f01\u4e1a\u4f18\u60e0\u5e45\u5ea6', type: 'slider', min: 0, max: 100, step: 5, default: 50, unit: '%' },
+        { id: 'tax_zone', name: 'tax_zone', label: '\u7a0e\u6536\u4f18\u60e0\u533a\u57df', type: 'select', options: [
+          { label: '\u65e0\u4f18\u60e0\u533a', value: 0 }, { label: '\u666e\u901a\u4f18\u60e0\u533a', value: 1 }, { label: '\u91cd\u70b9\u4f18\u60e0\u533a', value: 2 }, { label: '\u81ea\u8d38\u8bd5\u9a8c\u533a', value: 3 }
         ], default: 0, unit: '' },
       ],
       indicators: [
-        { id: 'gdp_growth', name: 'gdp_growth', label: 'GDP增长率', unit: '%', format: 'percent', higherIsBetter: true },
-        { id: 'gov_revenue', name: 'gov_revenue', label: '政府财政收入', unit: '亿元', format: 'number', higherIsBetter: false },
-        { id: 'gini', name: 'gini', label: '基尼系数', unit: '', format: 'number', higherIsBetter: false },
-        { id: 'business_investment', name: 'business_investment', label: '企业投资指数', unit: '', format: 'number', higherIsBetter: true },
-        { id: 'employment', name: 'employment', label: '就业率', unit: '%', format: 'percent', higherIsBetter: true },
-        { id: 'consumer_price', name: 'consumer_price', label: '消费者价格指数', unit: '', format: 'number', higherIsBetter: false },
+        { id: 'gdp_growth', name: 'gdp_growth', label: 'GDP\u589e\u957f\u7387', unit: '%', format: 'percent', higherIsBetter: true },
+        { id: 'gov_revenue', name: 'gov_revenue', label: '\u653f\u5e9c\u8d22\u653f\u6536\u5165', unit: '\u4ebf\u5143', format: 'number', higherIsBetter: false },
+        { id: 'gini', name: 'gini', label: '\u57fa\u5c3c\u7cfb\u6570', unit: '', format: 'number', higherIsBetter: false },
+        { id: 'business_investment', name: 'business_investment', label: '\u4f01\u4e1a\u6295\u8d44\u6307\u6570', unit: '', format: 'number', higherIsBetter: true },
+        { id: 'employment', name: 'employment', label: '\u5c31\u4e1a\u7387', unit: '%', format: 'percent', higherIsBetter: true },
+        { id: 'consumer_price', name: 'consumer_price', label: '\u6d88\u8d39\u8005\u4ef7\u683c\u6307\u6570', unit: '', format: 'number', higherIsBetter: false },
       ],
       formulas: [
         { indicatorId: 'gdp_growth', expression: '12 - 0.25 * (params.vat_rate - 13) - 0.15 * (params.corp_tax_rate - 25) + 0.3 * (params.small_tax_break / 50) + 0.5 * params.tax_zone + (Math.sin(params.vat_rate * 0.2) * 0.5)' },
@@ -144,19 +94,19 @@ export class SeedService implements OnModuleInit {
   private environmentCase() {
     return {
       parameters: [
-        { id: 'emission_standard', name: 'emission_standard', label: '排放标准严格度', type: 'slider', min: 1, max: 10, step: 0.5, default: 5, unit: '级' },
-        { id: 'pollution_tax', name: 'pollution_tax', label: '污染税税率', type: 'slider', min: 0, max: 500, step: 10, default: 100, unit: '元/吨' },
-        { id: 'green_subsidy', name: 'green_subsidy', label: '绿色补贴金额', type: 'slider', min: 0, max: 200, step: 10, default: 50, unit: '亿元' },
-        { id: 'enforce_strictness', name: 'enforce_strictness', label: '执法严格度', type: 'select', options: [
-          { label: '宽松', value: 0 }, { label: '一般', value: 1 }, { label: '严格', value: 2 }, { label: '极严', value: 3 }
+        { id: 'emission_standard', name: 'emission_standard', label: '\u6392\u653e\u6807\u51c6\u4e25\u683c\u5ea6', type: 'slider', min: 1, max: 10, step: 0.5, default: 5, unit: '\u7ea7' },
+        { id: 'pollution_tax', name: 'pollution_tax', label: '\u6c61\u67d3\u7a0e\u7a0e\u7387', type: 'slider', min: 0, max: 500, step: 10, default: 100, unit: '\u5143/\u5428' },
+        { id: 'green_subsidy', name: 'green_subsidy', label: '\u7eff\u8272\u8865\u8d34\u91d1\u989d', type: 'slider', min: 0, max: 200, step: 10, default: 50, unit: '\u4ebf\u5143' },
+        { id: 'enforce_strictness', name: 'enforce_strictness', label: '\u6267\u6cd5\u4e25\u683c\u5ea6', type: 'select', options: [
+          { label: '\u5bbd\u677e', value: 0 }, { label: '\u4e00\u822c', value: 1 }, { label: '\u4e25\u683c', value: 2 }, { label: '\u6781\u4e25', value: 3 }
         ], default: 1, unit: '' },
       ],
       indicators: [
-        { id: 'air_quality', name: 'air_quality', label: '空气质量指数(AQI)', unit: '', format: 'number', higherIsBetter: false },
-        { id: 'industry_output', name: 'industry_output', label: '工业总产值', unit: '亿元', format: 'number', higherIsBetter: true },
-        { id: 'green_jobs', name: 'green_jobs', label: '绿色就业岗位', unit: '万个', format: 'number', higherIsBetter: true },
-        { id: 'env_revenue', name: 'env_revenue', label: '环境税收入', unit: '亿元', format: 'number', higherIsBetter: false },
-        { id: 'public_satisfaction', name: 'public_satisfaction', label: '公众满意度', unit: '%', format: 'percent', higherIsBetter: true },
+        { id: 'air_quality', name: 'air_quality', label: '\u7a7a\u6c14\u8d28\u91cf\u6307\u6570(AQI)', unit: '', format: 'number', higherIsBetter: false },
+        { id: 'industry_output', name: 'industry_output', label: '\u5de5\u4e1a\u603b\u4ea7\u503c', unit: '\u4ebf\u5143', format: 'number', higherIsBetter: true },
+        { id: 'green_jobs', name: 'green_jobs', label: '\u7eff\u8272\u5c31\u4e1a\u5c97\u4f4d', unit: '\u4e07\u4e2a', format: 'number', higherIsBetter: true },
+        { id: 'env_revenue', name: 'env_revenue', label: '\u73af\u5883\u7a0e\u6536\u5165', unit: '\u4ebf\u5143', format: 'number', higherIsBetter: false },
+        { id: 'public_satisfaction', name: 'public_satisfaction', label: '\u516c\u4f17\u6ee1\u610f\u5ea6', unit: '%', format: 'percent', higherIsBetter: true },
       ],
       formulas: [
         { indicatorId: 'air_quality', expression: '80 - 5 * params.emission_standard - 0.05 * params.pollution_tax + 0.1 * params.green_subsidy - 8 * params.enforce_strictness + (Math.sin(params.emission_standard * 0.5) * 3)' },
@@ -171,19 +121,19 @@ export class SeedService implements OnModuleInit {
   private welfareCase() {
     return {
       parameters: [
-        { id: 'welfare_spending', name: 'welfare_spending', label: '社会保障支出', type: 'slider', min: 100, max: 2000, step: 50, default: 500, unit: '亿元' },
-        { id: 'min_wage', name: 'min_wage', label: '最低工资标准', type: 'slider', min: 2000, max: 6000, step: 100, default: 3000, unit: '元/月' },
-        { id: 'unemployment_benefit', name: 'unemployment_benefit', label: '失业救济替代率', type: 'slider', min: 20, max: 80, step: 5, default: 40, unit: '%' },
-        { id: 'healthcare_coverage', name: 'healthcare_coverage', label: '医疗保障覆盖率', type: 'select', options: [
-          { label: '基础覆盖(60%)', value: 60 }, { label: '中等覆盖(75%)', value: 75 }, { label: '全面覆盖(90%)', value: 90 }, { label: '全民免费(100%)', value: 100 }
+        { id: 'welfare_spending', name: 'welfare_spending', label: '\u793e\u4f1a\u4fdd\u969c\u652f\u51fa', type: 'slider', min: 100, max: 2000, step: 50, default: 500, unit: '\u4ebf\u5143' },
+        { id: 'min_wage', name: 'min_wage', label: '\u6700\u4f4e\u5de5\u8d44\u6807\u51c6', type: 'slider', min: 2000, max: 6000, step: 100, default: 3000, unit: '\u5143/\u6708' },
+        { id: 'unemployment_benefit', name: 'unemployment_benefit', label: '\u5931\u4e1a\u6551\u6d4e\u66ff\u4ee3\u7387', type: 'slider', min: 20, max: 80, step: 5, default: 40, unit: '%' },
+        { id: 'healthcare_coverage', name: 'healthcare_coverage', label: '\u533b\u7597\u4fdd\u969c\u8986\u76d6\u7387', type: 'select', options: [
+          { label: '\u57fa\u7840\u8986\u76d6(60%)', value: 60 }, { label: '\u4e2d\u7b49\u8986\u76d6(75%)', value: 75 }, { label: '\u5168\u9762\u8986\u76d6(90%)', value: 90 }, { label: '\u5168\u6c11\u514d\u8d39(100%)', value: 100 }
         ], default: 75, unit: '%' },
       ],
       indicators: [
-        { id: 'poverty_rate', name: 'poverty_rate', label: '贫困率', unit: '%', format: 'percent', higherIsBetter: false },
-        { id: 'fiscal_deficit', name: 'fiscal_deficit', label: '财政赤字率', unit: '%', format: 'percent', higherIsBetter: false },
-        { id: 'life_expectancy', name: 'life_expectancy', label: '人均预期寿命', unit: '岁', format: 'number', higherIsBetter: true },
-        { id: 'social_stability', name: 'social_stability', label: '社会稳定指数', unit: '', format: 'number', higherIsBetter: true },
-        { id: 'labor_participation', name: 'labor_participation', label: '劳动参与率', unit: '%', format: 'percent', higherIsBetter: true },
+        { id: 'poverty_rate', name: 'poverty_rate', label: '\u8d2b\u56f0\u7387', unit: '%', format: 'percent', higherIsBetter: false },
+        { id: 'fiscal_deficit', name: 'fiscal_deficit', label: '\u8d22\u653f\u8d64\u5b57\u7387', unit: '%', format: 'percent', higherIsBetter: false },
+        { id: 'life_expectancy', name: 'life_expectancy', label: '\u4eba\u5747\u9884\u671f\u5bff\u547d', unit: '\u5c81', format: 'number', higherIsBetter: true },
+        { id: 'social_stability', name: 'social_stability', label: '\u793e\u4f1a\u7a33\u5b9a\u6307\u6570', unit: '', format: 'number', higherIsBetter: true },
+        { id: 'labor_participation', name: 'labor_participation', label: '\u52b3\u52a8\u53c2\u4e0e\u7387', unit: '%', format: 'percent', higherIsBetter: true },
       ],
       formulas: [
         { indicatorId: 'poverty_rate', expression: '15 - 0.005 * params.welfare_spending - 0.001 * params.min_wage - 0.05 * params.unemployment_benefit - 0.05 * params.healthcare_coverage + 5 + (Math.sin(params.welfare_spending * 0.002) * 0.5)' },
@@ -198,19 +148,19 @@ export class SeedService implements OnModuleInit {
   private housingCase() {
     return {
       parameters: [
-        { id: 'property_tax', name: 'property_tax', label: '房产税税率', type: 'slider', min: 0, max: 5, step: 0.1, default: 1, unit: '%' },
-        { id: 'land_supply', name: 'land_supply', label: '住宅用地供应', type: 'slider', min: 100, max: 2000, step: 50, default: 500, unit: '公顷' },
-        { id: 'mortgage_rate', name: 'mortgage_rate', label: '贷款利率', type: 'slider', min: 2, max: 8, step: 0.25, default: 4.5, unit: '%' },
-        { id: 'purchase_restriction', name: 'purchase_restriction', label: '限购政策强度', type: 'select', options: [
-          { label: '无限购', value: 0 }, { label: '温和限购', value: 1 }, { label: '严格限购', value: 2 }, { label: '全面限购', value: 3 }
+        { id: 'property_tax', name: 'property_tax', label: '\u623f\u4ea7\u7a0e\u7a0e\u7387', type: 'slider', min: 0, max: 5, step: 0.1, default: 1, unit: '%' },
+        { id: 'land_supply', name: 'land_supply', label: '\u4f4f\u5b85\u7528\u5730\u4f9b\u5e94', type: 'slider', min: 100, max: 2000, step: 50, default: 500, unit: '\u516c\u9877' },
+        { id: 'mortgage_rate', name: 'mortgage_rate', label: '\u8d37\u6b3e\u5229\u7387', type: 'slider', min: 2, max: 8, step: 0.25, default: 4.5, unit: '%' },
+        { id: 'purchase_restriction', name: 'purchase_restriction', label: '\u9650\u8d2d\u653f\u7b56\u5f3a\u5ea6', type: 'select', options: [
+          { label: '\u65e0\u9650\u8d2d', value: 0 }, { label: '\u6e29\u548c\u9650\u8d2d', value: 1 }, { label: '\u4e25\u683c\u9650\u8d2d', value: 2 }, { label: '\u5168\u9762\u9650\u8d2d', value: 3 }
         ], default: 0, unit: '' },
       ],
       indicators: [
-        { id: 'housing_price', name: 'housing_price', label: '房价指数', unit: '', format: 'number', higherIsBetter: false },
-        { id: 'vacancy_rate', name: 'vacancy_rate', label: '住房空置率', unit: '%', format: 'percent', higherIsBetter: false },
-        { id: 'local_revenue_land', name: 'local_revenue_land', label: '土地出让收入', unit: '亿元', format: 'currency', higherIsBetter: false },
-        { id: 'affordability', name: 'affordability', label: '居民购房能力指数', unit: '', format: 'number', higherIsBetter: true },
-        { id: 'construction_employment', name: 'construction_employment', label: '建筑业就业', unit: '万人', format: 'number', higherIsBetter: true },
+        { id: 'housing_price', name: 'housing_price', label: '\u623f\u4ef7\u6307\u6570', unit: '', format: 'number', higherIsBetter: false },
+        { id: 'vacancy_rate', name: 'vacancy_rate', label: '\u4f4f\u623f\u7a7a\u7f6e\u7387', unit: '%', format: 'percent', higherIsBetter: false },
+        { id: 'local_revenue_land', name: 'local_revenue_land', label: '\u571f\u5730\u51fa\u8ba9\u6536\u5165', unit: '\u4ebf\u5143', format: 'currency', higherIsBetter: false },
+        { id: 'affordability', name: 'affordability', label: '\u5c45\u6c11\u8d2d\u623f\u80fd\u529b\u6307\u6570', unit: '', format: 'number', higherIsBetter: true },
+        { id: 'construction_employment', name: 'construction_employment', label: '\u5efa\u7b51\u4e1a\u5c31\u4e1a', unit: '\u4e07\u4eba', format: 'number', higherIsBetter: true },
       ],
       formulas: [
         { indicatorId: 'housing_price', expression: '200 - 15 * params.property_tax - 0.05 * params.land_supply - 8 * params.mortgage_rate - 20 * params.purchase_restriction + 100 + (Math.sin(params.property_tax * 0.5) * 5)' },
@@ -225,19 +175,19 @@ export class SeedService implements OnModuleInit {
   private innovationCase() {
     return {
       parameters: [
-        { id: 'rd_subsidy', name: 'rd_subsidy', label: '研发补贴金额', type: 'slider', min: 0, max: 500, step: 10, default: 100, unit: '亿元' },
-        { id: 'patent_protection', name: 'patent_protection', label: '知识产权保护强度', type: 'slider', min: 1, max: 10, step: 0.5, default: 5, unit: '级' },
-        { id: 'edu_investment', name: 'edu_investment', label: '教育投资', type: 'slider', min: 2000, max: 10000, step: 100, default: 4000, unit: '亿元' },
-        { id: 'talent_attraction', name: 'talent_attraction', label: '人才吸引力', type: 'select', options: [
-          { label: '基础吸引', value: 0 }, { label: '中等吸引', value: 1 }, { label: '强力吸引', value: 2 }, { label: '全球顶尖', value: 3 }
+        { id: 'rd_subsidy', name: 'rd_subsidy', label: '\u7814\u53d1\u8865\u8d34\u91d1\u989d', type: 'slider', min: 0, max: 500, step: 10, default: 100, unit: '\u4ebf\u5143' },
+        { id: 'patent_protection', name: 'patent_protection', label: '\u77e5\u8bc6\u4ea7\u6743\u4fdd\u62a4\u5f3a\u5ea6', type: 'slider', min: 1, max: 10, step: 0.5, default: 5, unit: '\u7ea7' },
+        { id: 'edu_investment', name: 'edu_investment', label: '\u6559\u80b2\u6295\u8d44', type: 'slider', min: 2000, max: 10000, step: 100, default: 4000, unit: '\u4ebf\u5143' },
+        { id: 'talent_attraction', name: 'talent_attraction', label: '\u4eba\u624d\u5438\u5f15\u529b', type: 'select', options: [
+          { label: '\u57fa\u7840\u5438\u5f15', value: 0 }, { label: '\u4e2d\u7b49\u5438\u5f15', value: 1 }, { label: '\u5f3a\u529b\u5438\u5f15', value: 2 }, { label: '\u5168\u7403\u9876\u5c16', value: 3 }
         ], default: 0, unit: '' },
       ],
       indicators: [
-        { id: 'patent_count', name: 'patent_count', label: '专利申请数', unit: '万件', format: 'number', higherIsBetter: true },
-        { id: 'high_tech_output', name: 'high_tech_output', label: '高技术产业产值', unit: '亿元', format: 'currency', higherIsBetter: true },
-        { id: 'rd_intensity', name: 'rd_intensity', label: '研发投入强度(R&D/GDP)', unit: '%', format: 'percent', higherIsBetter: true },
-        { id: 'talent_inflow', name: 'talent_inflow', label: '高端人才净流入', unit: '万人', format: 'number', higherIsBetter: true },
-        { id: 'tech_innovation_index', name: 'tech_innovation_index', label: '综合科技创新指数', unit: '', format: 'number', higherIsBetter: true },
+        { id: 'patent_count', name: 'patent_count', label: '\u4e13\u5229\u7533\u8bf7\u6570', unit: '\u4e07\u4ef6', format: 'number', higherIsBetter: true },
+        { id: 'high_tech_output', name: 'high_tech_output', label: '\u9ad8\u6280\u672f\u4ea7\u4e1a\u4ea7\u503c', unit: '\u4ebf\u5143', format: 'currency', higherIsBetter: true },
+        { id: 'rd_intensity', name: 'rd_intensity', label: '\u7814\u53d1\u6295\u5165\u5f3a\u5ea6(R&D/GDP)', unit: '%', format: 'percent', higherIsBetter: true },
+        { id: 'talent_inflow', name: 'talent_inflow', label: '\u9ad8\u7aef\u4eba\u624d\u51c0\u6d41\u5165', unit: '\u4e07\u4eba', format: 'number', higherIsBetter: true },
+        { id: 'tech_innovation_index', name: 'tech_innovation_index', label: '\u7efc\u5408\u79d1\u6280\u521b\u65b0\u6307\u6570', unit: '', format: 'number', higherIsBetter: true },
       ],
       formulas: [
         { indicatorId: 'patent_count', expression: '50 + 0.2 * params.rd_subsidy + 5 * params.patent_protection + 0.005 * params.edu_investment + 10 * params.talent_attraction + (Math.sin(params.rd_subsidy * 0.01) * 3)' },
@@ -252,20 +202,20 @@ export class SeedService implements OnModuleInit {
   private heroProCase() {
     return {
       parameters: [
-        { id: 'response_time', name: 'response_time', label: '应急响应时间', type: 'slider', min: 0.5, max: 24, step: 0.5, default: 6, unit: '小时' },
-        { id: 'rescue_teams', name: 'rescue_teams', label: '救援队伍数量', type: 'slider', min: 5, max: 100, step: 5, default: 30, unit: '支' },
-        { id: 'evacuation_radius', name: 'evacuation_radius', label: '疏散半径', type: 'slider', min: 1, max: 20, step: 1, default: 5, unit: '公里' },
-        { id: 'supply_reserve', name: 'supply_reserve', label: '应急物资储备', type: 'slider', min: 10, max: 100, step: 5, default: 40, unit: '%' },
-        { id: 'comm_strategy', name: 'comm_strategy', label: '危机沟通策略', type: 'select', options: [
-          { label: '内部通报', value: 0 }, { label: '有限公开', value: 1 }, { label: '实时公开', value: 2 }, { label: '多维全公开', value: 3 }
+        { id: 'response_time', name: 'response_time', label: '\u5e94\u6025\u54cd\u5e94\u65f6\u95f4', type: 'slider', min: 0.5, max: 24, step: 0.5, default: 6, unit: '\u5c0f\u65f6' },
+        { id: 'rescue_teams', name: 'rescue_teams', label: '\u6551\u63f4\u961f\u4f0d\u6570\u91cf', type: 'slider', min: 5, max: 100, step: 5, default: 30, unit: '\u652f' },
+        { id: 'evacuation_radius', name: 'evacuation_radius', label: '\u758f\u6563\u534a\u5f84', type: 'slider', min: 1, max: 20, step: 1, default: 5, unit: '\u516c\u91cc' },
+        { id: 'supply_reserve', name: 'supply_reserve', label: '\u5e94\u6025\u7269\u8d44\u50a8\u5907', type: 'slider', min: 10, max: 100, step: 5, default: 40, unit: '%' },
+        { id: 'comm_strategy', name: 'comm_strategy', label: '\u5371\u673a\u6c9f\u901a\u7b56\u7565', type: 'select', options: [
+          { label: '\u5185\u90e8\u901a\u62a5', value: 0 }, { label: '\u6709\u9650\u516c\u5f00', value: 1 }, { label: '\u5b9e\u65f6\u516c\u5f00', value: 2 }, { label: '\u591a\u7ef4\u5168\u516c\u5f00', value: 3 }
         ], default: 1, unit: '' },
       ],
       indicators: [
-        { id: 'casualties', name: 'casualties', label: '预计伤亡人数', unit: '人', format: 'number', higherIsBetter: false },
-        { id: 'econ_loss', name: 'econ_loss', label: '经济损失', unit: '亿元', format: 'currency', higherIsBetter: false },
-        { id: 'rescue_efficiency', name: 'rescue_efficiency', label: '救援效率', unit: '%', format: 'percent', higherIsBetter: true },
-        { id: 'public_trust', name: 'public_trust', label: '公众信任度', unit: '%', format: 'percent', higherIsBetter: true },
-        { id: 'infra_damage', name: 'infra_damage', label: '基础设施损坏', unit: '%', format: 'percent', higherIsBetter: false },
+        { id: 'casualties', name: 'casualties', label: '\u9884\u8ba1\u4f24\u4ea1\u4eba\u6570', unit: '\u4eba', format: 'number', higherIsBetter: false },
+        { id: 'econ_loss', name: 'econ_loss', label: '\u7ecf\u6d4e\u635f\u5931', unit: '\u4ebf\u5143', format: 'currency', higherIsBetter: false },
+        { id: 'rescue_efficiency', name: 'rescue_efficiency', label: '\u6551\u63f4\u6548\u7387', unit: '%', format: 'percent', higherIsBetter: true },
+        { id: 'public_trust', name: 'public_trust', label: '\u516c\u4f17\u4fe1\u4efb\u5ea6', unit: '%', format: 'percent', higherIsBetter: true },
+        { id: 'infra_damage', name: 'infra_damage', label: '\u57fa\u7840\u8bbe\u65bd\u635f\u574f', unit: '%', format: 'percent', higherIsBetter: false },
       ],
       formulas: [
         { indicatorId: 'casualties', expression: 'Math.round(500 - 10 * params.rescue_teams - 3 * params.evacuation_radius + 8 * params.response_time - 2 * params.supply_reserve + 20 * params.comm_strategy - 100 + (Math.sin(params.response_time * 0.3) * 30))' },
@@ -280,20 +230,20 @@ export class SeedService implements OnModuleInit {
   private gisCase() {
     return {
       parameters: [
-        { id: 'sensor_density', name: 'sensor_density', label: '传感器覆盖率', type: 'slider', min: 10, max: 100, step: 5, default: 40, unit: '%' },
-        { id: 'ai_investment', name: 'ai_investment', label: 'AI分析技术投入', type: 'slider', min: 10, max: 100, step: 5, default: 40, unit: '%' },
-        { id: 'traffic_optimization', name: 'traffic_optimization', label: '交通优化力度', type: 'slider', min: 0, max: 100, step: 5, default: 40, unit: '%' },
-        { id: 'smart_grid', name: 'smart_grid', label: '智能电网覆盖率', type: 'slider', min: 10, max: 100, step: 5, default: 40, unit: '%' },
-        { id: 'data_openness', name: 'data_openness', label: '数据开放程度', type: 'select', options: [
-          { label: '封闭', value: 0 }, { label: '有限开放', value: 1 }, { label: '政府内部共享', value: 2 }, { label: '全面开放+API', value: 3 }
+        { id: 'sensor_density', name: 'sensor_density', label: '\u4f20\u611f\u5668\u8986\u76d6\u7387', type: 'slider', min: 10, max: 100, step: 5, default: 40, unit: '%' },
+        { id: 'ai_investment', name: 'ai_investment', label: 'AI\u5206\u6790\u6280\u672f\u6295\u5165', type: 'slider', min: 10, max: 100, step: 5, default: 40, unit: '%' },
+        { id: 'traffic_optimization', name: 'traffic_optimization', label: '\u4ea4\u901a\u4f18\u5316\u529b\u5ea6', type: 'slider', min: 0, max: 100, step: 5, default: 40, unit: '%' },
+        { id: 'smart_grid', name: 'smart_grid', label: '\u667a\u80fd\u7535\u7f51\u8986\u76d6\u7387', type: 'slider', min: 10, max: 100, step: 5, default: 40, unit: '%' },
+        { id: 'data_openness', name: 'data_openness', label: '\u6570\u636e\u5f00\u653e\u7a0b\u5ea6', type: 'select', options: [
+          { label: '\u5c01\u95ed', value: 0 }, { label: '\u6709\u9650\u5f00\u653e', value: 1 }, { label: '\u653f\u5e9c\u5185\u90e8\u5171\u4eab', value: 2 }, { label: '\u5168\u9762\u5f00\u653e+API', value: 3 }
         ], default: 1, unit: '' },
       ],
       indicators: [
-        { id: 'traffic_efficiency', name: 'traffic_efficiency', label: '交通通行效率', unit: '%', format: 'percent', higherIsBetter: true },
-        { id: 'energy_savings', name: 'energy_savings', label: '能源节约率', unit: '%', format: 'percent', higherIsBetter: true },
-        { id: 'env_index', name: 'env_index', label: '城市环境指数', unit: '', format: 'number', higherIsBetter: true },
-        { id: 'gov_efficiency', name: 'gov_efficiency', label: '政府服务效率', unit: '%', format: 'percent', higherIsBetter: true },
-        { id: 'digital_life', name: 'digital_life', label: '居民数字化生活指数', unit: '', format: 'number', higherIsBetter: true },
+        { id: 'traffic_efficiency', name: 'traffic_efficiency', label: '\u4ea4\u901a\u901a\u884c\u6548\u7387', unit: '%', format: 'percent', higherIsBetter: true },
+        { id: 'energy_savings', name: 'energy_savings', label: '\u80fd\u6e90\u8282\u7ea6\u7387', unit: '%', format: 'percent', higherIsBetter: true },
+        { id: 'env_index', name: 'env_index', label: '\u57ce\u5e02\u73af\u5883\u6307\u6570', unit: '', format: 'number', higherIsBetter: true },
+        { id: 'gov_efficiency', name: 'gov_efficiency', label: '\u653f\u5e9c\u670d\u52a1\u6548\u7387', unit: '%', format: 'percent', higherIsBetter: true },
+        { id: 'digital_life', name: 'digital_life', label: '\u5c45\u6c11\u6570\u5b57\u5316\u751f\u6d3b\u6307\u6570', unit: '', format: 'number', higherIsBetter: true },
       ],
       formulas: [
         { indicatorId: 'traffic_efficiency', expression: '40 + 0.3 * params.sensor_density + 0.2 * params.ai_investment + 0.4 * params.traffic_optimization + 2 * params.data_openness + (Math.sin(params.traffic_optimization * 0.03) * 3)' },
