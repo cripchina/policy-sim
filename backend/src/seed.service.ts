@@ -15,8 +15,25 @@ export class SeedService implements OnModuleInit {
   ) {}
 
   async onModuleInit() {
-    const count = await this.userRepo.count();
-    if (count > 0) {
+    const userCount = await this.userRepo.count();
+    const caseCount = await this.caseRepo.count();
+
+    // Detect garbled data: if cases exist but have '?' in title, re-seed
+    if (caseCount > 0) {
+      const sample = await this.caseRepo.findOne({ where: {} });
+      if (sample && sample.title.includes('?')) {
+        console.log('Detected garbled case data, re-seeding...');
+        await this.caseRepo.clear();
+        const cases = this.buildCases();
+        await this.caseRepo.save(cases);
+        console.log('Cases re-seeded successfully!');
+      } else {
+        console.log('Database already has valid cases, skipping seed');
+      }
+      return;
+    }
+
+    if (userCount > 0) {
       console.log('Database already has users, skipping seed');
       return;
     }
