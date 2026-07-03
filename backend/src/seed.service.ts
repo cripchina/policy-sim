@@ -1,0 +1,88 @@
+import { Injectable, OnModuleInit } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import * as bcrypt from 'bcryptjs';
+import { User, UserRole } from './users/user.entity';
+import { PolicyCase } from './cases/case.entity';
+
+@Injectable()
+export class SeedService implements OnModuleInit {
+  constructor(
+    @InjectRepository(User)
+    private userRepo: Repository<User>,
+    @InjectRepository(PolicyCase)
+    private caseRepo: Repository<PolicyCase>,
+  ) {}
+
+  async onModuleInit() {
+    const count = await this.userRepo.count();
+    if (count > 0) {
+      console.log(`Database already has ${count} users, skipping seed`);
+      return;
+    }
+
+    console.log('Seeding database...');
+
+    const hashedPwd = await bcrypt.hash('123456', 10);
+
+    await this.userRepo.save([
+      { username: 'admin', password: hashedPwd, displayName: '绯荤粺绠＄悊鍛?, role: UserRole.ADMIN },
+      { username: 'teacher1', password: hashedPwd, displayName: '寮犳暀鎺?, role: UserRole.TEACHER },
+      { username: 'teacher2', password: hashedPwd, displayName: '鏉庤€佸笀', role: UserRole.TEACHER },
+      { username: 'student1', password: hashedPwd, displayName: '鐜嬪悓瀛?, role: UserRole.STUDENT },
+      { username: 'student2', password: hashedPwd, displayName: '鍒樺悓瀛?, role: UserRole.STUDENT },
+      { username: 'student3', password: hashedPwd, displayName: '闄堝悓瀛?, role: UserRole.STUDENT },
+    ]);
+
+    const cases = this.buildCases();
+    await this.caseRepo.save(cases);
+
+    console.log('Seed completed successfully!');
+  }
+
+  private buildCases(): Partial<PolicyCase>[] {
+    return [
+      {
+        title: '绋庢敹鏀跨瓥璋冩暣瀵瑰畯瑙傜粡娴庣殑褰卞搷',
+        description: '妯℃嫙璋冩暣澧炲€肩◣鐜囥€佷紒涓氭墍寰楃◣鐜囩瓑绋庢敹宸ュ叿锛岃瀵熷GDP銆佸氨涓氥€佹敹鍏ュ垎閰嶇瓑瀹忚缁忔祹鎸囨爣鐨勫奖鍝嶃€?,
+        category: '璐㈡斂绋庢敹',
+        background: `## 妗堜緥鑳屾櫙\n\n绋庢敹鏀跨瓥鏄浗瀹跺畯瑙傝皟鎺х殑閲嶈宸ュ叿銆傚綋鍓嶆垜鍥界粡娴庨潰涓翠笅琛屽帇鍔涳紝濡備綍閫氳繃绋庢敹鏀跨瓥璋冩暣鏉?绋冲闀裤€佽皟缁撴瀯銆佹儬姘戠敓"鏄斂搴滈潰涓寸殑鍏抽敭璇鹃銆俙,
+        config: JSON.stringify(this.taxPolicyCase()),
+      },
+      {
+        title: '鐜瑙勫埗鏀跨瓥涓庣粡娴庡彂灞曠殑骞宠　',
+        description: '鎺㈢储鎺掓斁鏍囧噯銆佹薄鏌撶◣銆佺豢鑹茶ˉ璐寸瓑鐜鏀跨瓥宸ュ叿锛屽浣曞湪鏀瑰杽鐜璐ㄩ噺鐨勫悓鏃朵績杩涗骇涓氬崌绾у拰灏变笟銆?,
+        category: '鐜鏀跨瓥',
+        background: `## 妗堜緥鑳屾櫙\n\n缁忔祹鍙戝睍涓庣幆澧冧繚鎶や箣闂寸殑骞宠　鏄彲鎸佺画鍙戝睍鐨勬牳蹇冩寫鎴樸€俙,
+        config: JSON.stringify(this.environmentCase()),
+      },
+      {
+        title: '绀句細淇濋殰鏀嚭涓庢皯鐢熸敼鍠?,
+        description: '璋冩暣绀句細淇濋殰鏀嚭銆佹渶浣庡伐璧勩€佸け涓氶噾鏇夸唬鐜囧拰鍖荤枟淇濋殰瑕嗙洊闈紝璇勪及瀵硅传鍥扮巼銆佺ぞ浼氱ǔ瀹氬拰璐㈡斂鍙寔缁€х殑缁煎悎褰卞搷銆?,
+        category: '绀句細淇濋殰',
+        background: `## 妗堜緥鑳屾櫙\n\n瀹屽杽鐨勭ぞ浼氫繚闅滀綋绯绘槸姘戠敓绂忕鐨勯噸瑕佷繚闅溿€俙,
+        config: JSON.stringify(this.welfareCase()),
+      },
+      {
+        title: '鎴垮湴浜ц皟鎺ф斂绛栦笌甯傚満绋冲畾',
+        description: '杩愮敤鎴夸骇绋庛€佸湡鍦颁緵搴斻€佹埧璐峰埄鐜囧拰闄愯喘鏀跨瓥绛夊伐鍏凤紝瀹炵幇"鎴夸綇涓嶇倰"鐩爣锛屼績杩涙埧鍦颁骇甯傚満鍋ュ悍鍙戝睍銆?,
+        category: '浣忔埧鏀跨瓥',
+        background: `## 妗堜緥鑳屾櫙\n\n鎴垮湴浜у競鍦虹殑骞崇ǔ鍋ュ悍鍙戝睍鍏崇郴鍒板浗姘戠粡娴庡叏灞€鍜屼汉姘戠兢浼楃殑鍒囪韩鍒╃泭銆俙,
+        config: JSON.stringify(this.housingCase()),
+      },
+      {
+        title: '绉戞妧鍒涙柊婵€鍔辨斂绛栦笌浜т笟鍗囩骇',
+        description: '閫氳繃鐮斿彂琛ヨ创銆佺煡璇嗕骇鏉冧繚鎶ゃ€佹暀鑲叉姇鍏ュ拰浜烘墠寮曡繘鏀跨瓥锛屾帹鍔ㄧ鎶€鍒涙柊鍜屼骇涓氱粨鏋勫崌绾с€?,
+        category: '绉戞妧鏀跨瓥',
+        background: `## 妗堜緥鑳屾櫙\n\n绉戞妧鍒涙柊鏄紩棰嗗彂灞曠殑绗竴鍔ㄥ姏銆俙,
+        config: JSON.stringify(this.innovationCase()),
+      },
+    ];
+  }
+
+  private taxPolicyCase() { return { parameters: [{ id: 'vat_rate', name: 'vat_rate', label: '澧炲€肩◣鐜?, type: 'slider', min: 5, max: 25, step: 0.5, default: 13, unit: '%' }, { id: 'corp_tax_rate', name: 'corp_tax_rate', label: '浼佷笟鎵€寰楃◣鐜?, type: 'slider', min: 10, max: 35, step: 1, default: 25, unit: '%' }, { id: 'small_tax_break', name: 'small_tax_break', label: '灏忓井浼佷笟鍑忓厤鍔涘害', type: 'slider', min: 0, max: 100, step: 5, default: 50, unit: '%' }, { id: 'tax_zone', name: 'tax_zone', label: '绋庢敹浼樻儬鍖烘斂绛?, type: 'select', options: [{ label: '鏃犱紭鎯犲尯', value: 0 }, { label: '鏅€氫紭鎯犲尯', value: 1 }, { label: '閲嶇偣浼樻儬鍖?, value: 2 }, { label: '鐗瑰尯鏀跨瓥', value: 3 }], default: 0, unit: '' }], indicators: [{ id: 'gdp_growth', name: 'gdp_growth', label: 'GDP澧為暱鐜?, unit: '%', format: 'percent', higherIsBetter: true }, { id: 'gov_revenue', name: 'gov_revenue', label: '鏀垮簻璐㈡斂鏀跺叆', unit: '浜垮厓', format: 'number', higherIsBetter: false }, { id: 'gini', name: 'gini', label: '鍩哄凹绯绘暟', unit: '', format: 'number', higherIsBetter: false }, { id: 'business_investment', name: 'business_investment', label: '浼佷笟鎶曡祫鎸囨暟', unit: '', format: 'number', higherIsBetter: true }, { id: 'employment', name: 'employment', label: '灏变笟鐜?, unit: '%', format: 'percent', higherIsBetter: true }, { id: 'consumer_price', name: 'consumer_price', label: '娑堣垂鑰呬环鏍兼寚鏁?, unit: '', format: 'number', higherIsBetter: false }], formulas: [{ indicatorId: 'gdp_growth', expression: '12 - 0.25 * (params.vat_rate - 13) - 0.15 * (params.corp_tax_rate - 25) + 0.3 * (params.small_tax_break / 50) + 0.5 * params.tax_zone + (Math.sin(params.vat_rate * 0.2) * 0.5)' }, { indicatorId: 'gov_revenue', expression: '800 + params.vat_rate * 20 + params.corp_tax_rate * 15 - params.small_tax_break * 2 + params.tax_zone * 30 + (Math.random() * 10 - 5)' }, { indicatorId: 'gini', expression: '0.45 - 0.002 * params.small_tax_break + 0.003 * params.vat_rate - 0.01 * params.tax_zone + (Math.sin(params.corp_tax_rate * 0.05) * 0.02)' }, { indicatorId: 'business_investment', expression: '100 - 1.5 * (params.corp_tax_rate - 15) + 0.5 * params.small_tax_break + 5 * params.tax_zone - 0.3 * params.vat_rate + (Math.cos(params.corp_tax_rate * 0.1) * 2)' }, { indicatorId: 'employment', expression: '95 + 0.08 * params.small_tax_break - 0.2 * (params.vat_rate - 10) + 0.5 * params.tax_zone + (Math.random() * 0.5)' }, { indicatorId: 'consumer_price', expression: '102 + 0.15 * (params.vat_rate - 10) - 0.1 * params.small_tax_break - 0.2 * params.tax_zone + (Math.sin(params.vat_rate * 0.3) * 0.5)' }] }; }
+  private environmentCase() { return { parameters: [{ id: 'emission_standard', name: 'emission_standard', label: '鎺掓斁鏍囧噯涓ユ牸搴?, type: 'slider', min: 1, max: 10, step: 0.5, default: 5, unit: '绾? }, { id: 'pollution_tax', name: 'pollution_tax', label: '姹℃煋绋庣◣鐜?, type: 'slider', min: 0, max: 500, step: 10, default: 100, unit: '鍏?鍚? }, { id: 'green_subsidy', name: 'green_subsidy', label: '缁胯壊鎶€鏈ˉ璐?, type: 'slider', min: 0, max: 200, step: 10, default: 50, unit: '浜垮厓' }, { id: 'enforce_strictness', name: 'enforce_strictness', label: '鎵ф硶涓ユ牸搴?, type: 'select', options: [{ label: '瀹芥澗', value: 0 }, { label: '涓€鑸?, value: 1 }, { label: '涓ユ牸', value: 2 }, { label: '鏋佷弗', value: 3 }], default: 1, unit: '' }], indicators: [{ id: 'air_quality', name: 'air_quality', label: '绌烘皵璐ㄩ噺鎸囨暟(AQI)', unit: '', format: 'number', higherIsBetter: false }, { id: 'industry_output', name: 'industry_output', label: '宸ヤ笟鎬讳骇鍊?, unit: '浜垮厓', format: 'number', higherIsBetter: true }, { id: 'green_jobs', name: 'green_jobs', label: '缁胯壊灏变笟宀椾綅', unit: '涓囦釜', format: 'number', higherIsBetter: true }, { id: 'env_revenue', name: 'env_revenue', label: '鐜绋庢敹鍏?, unit: '浜垮厓', format: 'number', higherIsBetter: false }, { id: 'public_satisfaction', name: 'public_satisfaction', label: '鍏紬婊℃剰搴?, unit: '%', format: 'percent', higherIsBetter: true }], formulas: [{ indicatorId: 'air_quality', expression: '80 - 5 * params.emission_standard - 0.05 * params.pollution_tax + 0.1 * params.green_subsidy - 8 * params.enforce_strictness + (Math.sin(params.emission_standard * 0.5) * 3)' }, { indicatorId: 'industry_output', expression: '5000 - 100 * params.emission_standard - 2 * params.pollution_tax + 15 * params.green_subsidy - 50 * params.enforce_strictness + 200 * Math.log(params.emission_standard + 1)' }, { indicatorId: 'green_jobs', expression: '20 + 3 * params.emission_standard + 0.15 * params.green_subsidy + 5 * params.enforce_strictness + (Math.random() * 2)' }, { indicatorId: 'env_revenue', expression: '200 + params.pollution_tax * 0.5 + 30 * params.enforce_strictness - params.green_subsidy * 0.1 + (Math.sin(params.pollution_tax * 0.01) * 10)' }, { indicatorId: 'public_satisfaction', expression: '60 + 4 * params.emission_standard + 0.1 * params.green_subsidy + 3 * params.enforce_strictness - 0.02 * params.pollution_tax + (Math.cos(params.emission_standard * 0.3) * 2)' }] }; }
+  private welfareCase() { return { parameters: [{ id: 'welfare_spending', name: 'welfare_spending', label: '绀句細淇濋殰鏀嚭', type: 'slider', min: 100, max: 2000, step: 50, default: 500, unit: '浜垮厓' }, { id: 'min_wage', name: 'min_wage', label: '鏈€浣庡伐璧勬爣鍑?, type: 'slider', min: 2000, max: 6000, step: 100, default: 3000, unit: '鍏?鏈? }, { id: 'unemployment_benefit', name: 'unemployment_benefit', label: '澶变笟閲戞浛浠ｇ巼', type: 'slider', min: 20, max: 80, step: 5, default: 40, unit: '%' }, { id: 'healthcare_coverage', name: 'healthcare_coverage', label: '鍖荤枟淇濋殰瑕嗙洊鐜?, type: 'select', options: [{ label: '鍩虹瑕嗙洊(60%)', value: 60 }, { label: '涓瓑瑕嗙洊(75%)', value: 75 }, { label: '鍏ㄩ潰瑕嗙洊(90%)', value: 90 }, { label: '鍏ㄦ皯鍏嶈垂(100%)', value: 100 }], default: 75, unit: '%' }], indicators: [{ id: 'poverty_rate', name: 'poverty_rate', label: '璐洶鐜?, unit: '%', format: 'percent', higherIsBetter: false }, { id: 'fiscal_deficit', name: 'fiscal_deficit', label: '璐㈡斂璧ゅ瓧鐜?, unit: '%', format: 'percent', higherIsBetter: false }, { id: 'life_expectancy', name: 'life_expectancy', label: '浜哄潎棰勬湡瀵垮懡', unit: '宀?, format: 'number', higherIsBetter: true }, { id: 'social_stability', name: 'social_stability', label: '绀句細绋冲畾鎸囨暟', unit: '', format: 'number', higherIsBetter: true }, { id: 'labor_participation', name: 'labor_participation', label: '鍔冲姩鍔涘弬涓庣巼', unit: '%', format: 'percent', higherIsBetter: true }], formulas: [{ indicatorId: 'poverty_rate', expression: '15 - 0.005 * params.welfare_spending - 0.001 * params.min_wage - 0.05 * params.unemployment_benefit - 0.05 * params.healthcare_coverage + 5 + (Math.sin(params.welfare_spending * 0.002) * 0.5)' }, { indicatorId: 'fiscal_deficit', expression: '3 + 0.002 * params.welfare_spending + 0.0003 * params.min_wage + 0.01 * params.unemployment_benefit + 0.02 * params.healthcare_coverage - 1.5 + (Math.cos(params.welfare_spending * 0.001) * 0.3)' }, { indicatorId: 'life_expectancy', expression: '76 + 0.001 * params.welfare_spending + 0.0002 * params.min_wage + 0.03 * params.healthcare_coverage + (Math.sin(params.welfare_spending * 0.003) * 0.2)' }, { indicatorId: 'social_stability', expression: '50 + 0.02 * params.welfare_spending - 0.5 * (params.unemployment_benefit > 60 ? params.unemployment_benefit - 60 : 0) + 0.2 * params.healthcare_coverage + (Math.sin(params.welfare_spending * 0.003) * 2)' }, { indicatorId: 'labor_participation', expression: '65 + 0.002 * params.min_wage - 0.05 * params.unemployment_benefit + 0.01 * params.healthcare_coverage - params.poverty_rate * 0.3 + (Math.cos(params.min_wage * 0.0005) * 1)' }] }; }
+  private housingCase() { return { parameters: [{ id: 'property_tax', name: 'property_tax', label: '鎴夸骇绋庣◣鐜?, type: 'slider', min: 0, max: 5, step: 0.1, default: 1, unit: '%' }, { id: 'land_supply', name: 'land_supply', label: '浣忓畢鐢ㄥ湴渚涘簲', type: 'slider', min: 100, max: 2000, step: 50, default: 500, unit: '鍏》' }, { id: 'mortgage_rate', name: 'mortgage_rate', label: '鎴胯捶鍒╃巼', type: 'slider', min: 2, max: 8, step: 0.25, default: 4.5, unit: '%' }, { id: 'purchase_restriction', name: 'purchase_restriction', label: '闄愯喘鏀跨瓥寮哄害', type: 'select', options: [{ label: '鏃犻檺璐?, value: 0 }, { label: '娓╁拰闄愯喘', value: 1 }, { label: '涓ユ牸闄愯喘', value: 2 }, { label: '鏋佷弗闄愯喘', value: 3 }], default: 0, unit: '' }], indicators: [{ id: 'housing_price', name: 'housing_price', label: '鎴夸环鎸囨暟', unit: '', format: 'number', higherIsBetter: false }, { id: 'vacancy_rate', name: 'vacancy_rate', label: '浣忔埧绌虹疆鐜?, unit: '%', format: 'percent', higherIsBetter: false }, { id: 'local_revenue_land', name: 'local_revenue_land', label: '鍦熷湴鍑鸿鏀跺叆', unit: '浜垮厓', format: 'currency', higherIsBetter: false }, { id: 'affordability', name: 'affordability', label: '灞呮皯璐埧鑳藉姏鎸囨暟', unit: '', format: 'number', higherIsBetter: true }, { id: 'construction_employment', name: 'construction_employment', label: '寤虹瓚涓氬氨涓?, unit: '涓囦汉', format: 'number', higherIsBetter: true }], formulas: [{ indicatorId: 'housing_price', expression: '200 - 15 * params.property_tax - 0.05 * params.land_supply - 8 * params.mortgage_rate - 20 * params.purchase_restriction + 100 + (Math.sin(params.property_tax * 0.5) * 5)' }, { indicatorId: 'vacancy_rate', expression: '20 - 2 * params.property_tax + 0.005 * params.land_supply + 1.5 * params.mortgage_rate - 2 * params.purchase_restriction + (Math.cos(params.land_supply * 0.002) * 1)' }, { indicatorId: 'local_revenue_land', expression: '8000 - 300 * params.property_tax + params.land_supply * 4 - 200 * params.purchase_restriction + (Math.sin(params.land_supply * 0.001) * 100)' }, { indicatorId: 'affordability', expression: '40 + 5 * params.property_tax + 0.02 * params.land_supply - 3 * params.mortgage_rate + 8 * params.purchase_restriction + (Math.cos(params.property_tax * 0.8) * 2)' }, { indicatorId: 'construction_employment', expression: '500 + 0.05 * params.land_supply - 10 * params.property_tax - 20 * params.mortgage_rate + 15 * params.purchase_restriction + (Math.sin(params.land_supply * 0.003) * 10)' }] }; }
+  private innovationCase() { return { parameters: [{ id: 'rd_subsidy', name: 'rd_subsidy', label: '鐮斿彂琛ヨ创鍔涘害', type: 'slider', min: 0, max: 500, step: 10, default: 100, unit: '浜垮厓' }, { id: 'patent_protection', name: 'patent_protection', label: '鐭ヨ瘑浜ф潈淇濇姢寮哄害', type: 'slider', min: 1, max: 10, step: 0.5, default: 5, unit: '绾? }, { id: 'edu_investment', name: 'edu_investment', label: '鏁欒偛鎶曞叆', type: 'slider', min: 2000, max: 10000, step: 100, default: 4000, unit: '浜垮厓' }, { id: 'talent_attraction', name: 'talent_attraction', label: '浜烘墠寮曡繘鍔涘害', type: 'select', options: [{ label: '鍩虹鏀跨瓥', value: 0 }, { label: '涓瓑鍔涘害', value: 1 }, { label: '寮哄姏寮曡繘', value: 2 }, { label: '鍏ㄧ悆寮曟墠', value: 3 }], default: 0, unit: '' }], indicators: [{ id: 'patent_count', name: 'patent_count', label: '涓撳埄鐢宠閲?, unit: '涓囦欢', format: 'number', higherIsBetter: true }, { id: 'high_tech_output', name: 'high_tech_output', label: '楂樻妧鏈骇涓氫骇鍊?, unit: '浜垮厓', format: 'currency', higherIsBetter: true }, { id: 'rd_intensity', name: 'rd_intensity', label: '鐮斿彂鎶曞叆寮哄害(R&D/GDP)', unit: '%', format: 'percent', higherIsBetter: true }, { id: 'talent_inflow', name: 'talent_inflow', label: '楂樼浜烘墠鍑€娴佸叆', unit: '涓囦汉', format: 'number', higherIsBetter: true }, { id: 'tech_innovation_index', name: 'tech_innovation_index', label: '缁煎悎绉戞妧鍒涙柊鎸囨暟', unit: '', format: 'number', higherIsBetter: true }], formulas: [{ indicatorId: 'patent_count', expression: '50 + 0.2 * params.rd_subsidy + 5 * params.patent_protection + 0.005 * params.edu_investment + 10 * params.talent_attraction + (Math.sin(params.rd_subsidy * 0.01) * 3)' }, { indicatorId: 'high_tech_output', expression: '15000 + 30 * params.rd_subsidy + 500 * params.patent_protection + 2 * params.edu_investment + 1000 * params.talent_attraction + (Math.cos(params.rd_subsidy * 0.005) * 200)' }, { indicatorId: 'rd_intensity', expression: '2.0 + 0.005 * params.rd_subsidy + 0.1 * params.patent_protection + 0.0002 * params.edu_investment + 0.2 * params.talent_attraction + (Math.random() * 0.1)' }, { indicatorId: 'talent_inflow', expression: '5 + 0.03 * params.rd_subsidy + 0.8 * params.patent_protection + 0.002 * params.edu_investment + 5 * params.talent_attraction + (Math.sin(params.talent_attraction * 0.5) * 1)' }, { indicatorId: 'tech_innovation_index', expression: '60 + 0.06 * params.rd_subsidy + 3 * params.patent_protection + 0.004 * params.edu_investment + 5 * params.talent_attraction + (Math.cos(params.rd_subsidy * 0.008) * 2)' }] }; }
+}
